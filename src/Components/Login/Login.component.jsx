@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -23,7 +24,7 @@ const FormWrapper = styled.div`
 `;
 
 const Title = styled.h1`
-  color:#202123;
+  color: #202123;
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
@@ -64,37 +65,34 @@ const ErrorMessage = styled.p`
 `;
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    console.log(login, password);
+    fetch("https://parkspotter-backened.onrender.com/accounts/user_login/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ login: login, password: password }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
 
-    try {
-      const response = await fetch('our user login api link', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.role);
+        localStorage.setItem("user_id", data.user_id);
+        navigate("/home");
+      })
+      .catch((error) => {
+        setError("Invalid email or password. Please try again.");
       });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
-        console.log('Login successful', data);
-      } else {
-        setError(data.message || 'Login failed');
-      }
-    } catch (error) {
-      setError('An error occurred. Please try again.');
-    }
   };
 
   return (
@@ -103,10 +101,10 @@ const LoginPage = () => {
         <Title>Login</Title>
         <form onSubmit={handleSubmit}>
           <Input
-            type="email"
+            type="text"
             placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
             required
           />
           <Input
