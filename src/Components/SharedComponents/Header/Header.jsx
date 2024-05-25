@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
@@ -66,18 +66,21 @@ const Header = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleOutsideClick = (event) => {
-    if (isDropdownOpen && !event.target.closest("#profile-dropdown")) {
-      setIsDropdownOpen(false);
-    }
-  };
+  const handleOutsideClick = useCallback(
+    (event) => {
+      if (isDropdownOpen && !event.target.closest("#profile-dropdown")) {
+        setIsDropdownOpen(false);
+      }
+    },
+    [isDropdownOpen]
+  );
 
   React.useEffect(() => {
     document.addEventListener("click", handleOutsideClick);
     return () => {
       document.removeEventListener("click", handleOutsideClick);
     };
-  }, [isDropdownOpen]);
+  }, [handleOutsideClick]);
 
   return (
     <NavbarContainer>
