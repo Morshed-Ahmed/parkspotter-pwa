@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import styled from "styled-components"
-import carIcon from "../../Assets/CarIcon/caricon.png" // Adjust the path as needed
+import carIcon from "../../Assets/CarIcon/caricon.png" 
 
 const Container = styled.div`
   padding: 20px;
