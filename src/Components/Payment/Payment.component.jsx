@@ -7,7 +7,8 @@ import { Elements, CardElement, useStripe, useElements } from "@stripe/react-str
 import cashIcon from "../../Assets/PaymentIcons/dollar.png";
 import stripeIcon from "../../Assets/PaymentIcons/stripe.png";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+// Load Stripe with the publishable key from environment variables
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 const Container = styled.div`
   padding: 20px;
