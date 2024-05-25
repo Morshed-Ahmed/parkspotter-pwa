@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import styled from "styled-components"
-import carIcon from "../../Assets/CarIcon/caricon.png" 
+import carIcon from "../../Assets/CarIcon/caricon.png"
 
 const Container = styled.div`
   padding: 20px;
+  background-color: #f6f6f6;
+  height: 100dvh;
 `
 
 const Title = styled.h1`
   text-align: center;
   margin-bottom: 20px;
   font-size: 1.5em;
+  color: #202123;
 `
 
 const Filters = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
+  background-color: coral;
+  padding: 10px 25px;
+  border-radius: 5px;
   gap: 10px;
   margin-bottom: 20px;
   flex-wrap: wrap;
@@ -23,9 +29,11 @@ const Filters = styled.div`
 
 const Filter = styled.select`
   padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
+  border-radius: 25px;
+  border: 1px solid #fff;
+  background-color: #fff;
+  color: #202123;
+  font-size: 0.8rem;
 `
 
 const ParkingLotContainer = styled.div`
@@ -35,26 +43,31 @@ const ParkingLotContainer = styled.div`
 `
 
 const ZoneContainer = styled.div`
-  border: 2px dashed #ccc;
+  border: 2px dashed #aaa;
   padding: 10px;
   margin-top: 30px;
   position: relative;
+  border-left: 0;
+  border-right: 0;
+
   &:first-of-type {
-    border-top: 2px dashed #ccc;
+    border-top: 2px dashed #aaa;
   }
   &:last-of-type {
-    border-bottom: 2px dashed #ccc;
+    border-bottom: 2px dashed #aaa;
   }
 `
 
 const ZoneTitle = styled.h2`
   position: absolute;
-  top: -20px;
+  top: -50px;
   left: 50%;
   transform: translateX(-50%);
-  background: #fff;
-  padding: 0 10px;
-  font-size: 1.25em;
+  background: #202123;
+  color: #fff;
+  padding: 3px 15px;
+  font-size: 1em;
+  border-radius: 25px;
 `
 
 const SlotRow = styled.div`
@@ -67,17 +80,17 @@ const SlotRow = styled.div`
 const Slot = styled.div`
   width: 100px;
   height: 160px;
-  border-left: 1px dashed #ccc;
-  border-right: 1px dashed #ccc;
+  border-left: 2px dashed #aaa;
+  border-right: 2px dashed #aaa;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #fff;
+  background-color: #f6f6f6;
   position: relative;
   cursor: pointer;
-
+  color: #202123;
   &:hover {
-    background-color: ${(props) => (props.booked ? "#202123" : "#ccffcc")};
+    background-color: ${(props) => (props.booked ? "coral" : "#ccffcc")};
   }
 
   @media (max-width: 768px) {
@@ -87,21 +100,27 @@ const Slot = styled.div`
 `
 
 const CarIcon = styled.img`
-  width: 80%;
-  height: 80%;
+  width: 95%;
+  height: 60%;
+  margin-top: 15px;
 `
 
 const SlotText = styled.div`
   position: absolute;
-  top: 0px;
-  right: 25px;
+  top: 2px;
+  right: 5px;
   background-color: #fff;
-  border: 1px solid ${(props) => (props.booked ? "#ccc" : "#ccc")};
-  border-radius: 10px;
-  padding: 2px 5px;
-  font-size: 10px;
-  
+  border: 2px solid ${(props) => (props.booked ? "#202123" : "blue")};
+  border-radius: 35px;
+  padding: 2px 7px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
   color: ${(props) => (props.booked ? "#202123" : "#202123")};
+
+  @media (max-width: 768px) {
+    padding: 1px 7px;
+  }
 `
 
 const LocationDetail = () => {
@@ -119,7 +138,6 @@ const LocationDetail = () => {
         setParkingSlots(data.slots)
       } catch (error) {
         console.error("Error fetching parking slots:", error)
-        // Fallback to dummy data
         const dummyData = [
           {
             slotNumber: 1,
@@ -135,7 +153,6 @@ const LocationDetail = () => {
             booked: true,
             userEmail: "user2@example.com",
           },
-          // Add more dummy slots as needed
         ]
         setParkingSlots(dummyData)
       }
@@ -157,18 +174,22 @@ const LocationDetail = () => {
     return true
   })
 
+  const zones = Array.from(new Set(parkingSlots.map((slot) => slot.zone)))
+
   return (
     <Container>
-      <Title>Choose Slot</Title>
+      <Title>Choose Parking Spot</Title>
       <Filters>
         <Filter
           value={zoneFilter}
           onChange={(e) => setZoneFilter(e.target.value)}
         >
           <option value="all">All Zones</option>
-          <option value="A">Zone A</option>
-          <option value="B">Zone B</option>
-          {/* Add more zones as needed */}
+          {zones.map((zone) => (
+            <option key={zone} value={zone}>
+              Zone {zone}
+            </option>
+          ))}
         </Filter>
         <Filter
           value={availabilityFilter}
@@ -180,7 +201,7 @@ const LocationDetail = () => {
         </Filter>
       </Filters>
       <ParkingLotContainer>
-        {["A", "B"].map((zone) => (
+        {zones.map((zone) => (
           <ZoneContainer key={zone}>
             <ZoneTitle>Zone {zone}</ZoneTitle>
             <SlotRow>
@@ -198,7 +219,7 @@ const LocationDetail = () => {
                       <SlotText>{slot.slotNumber}</SlotText>
                     )}
                     <SlotText booked={slot.booked}>
-                      {slot.booked ? "Booked" : "Available"}
+                      {slot.booked ? "Occupied" : "Available"}
                     </SlotText>
                   </Slot>
                 ))}
@@ -211,3 +232,4 @@ const LocationDetail = () => {
 }
 
 export default LocationDetail
+// original
