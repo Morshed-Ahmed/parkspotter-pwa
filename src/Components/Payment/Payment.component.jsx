@@ -7,7 +7,6 @@ import { Elements, CardElement, useStripe, useElements } from "@stripe/react-str
 import cashIcon from "../../Assets/PaymentIcons/dollar.png";
 import stripeIcon from "../../Assets/PaymentIcons/stripe.png";
 
-// Load Stripe with the publishable key from environment variables
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 const Container = styled.div`
@@ -99,7 +98,7 @@ const StripePaymentForm = ({ bookingDetails, onPaymentSuccess }) => {
     try {
       const paymentResponse = await axios.post('/.netlify/functions/create-stripe-payment-intent', {
         paymentMethodId: cardElement,
-        amount: bookingDetails.amount * 100, 
+        amount: bookingDetails.amount * 100,
         currency: "usd",
       });
 
@@ -135,9 +134,14 @@ const StripePaymentForm = ({ bookingDetails, onPaymentSuccess }) => {
 const Payment = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { bookingDetails } = location.state;
   const [selectedOption, setSelectedOption] = useState("cash");
   const [showStripeForm, setShowStripeForm] = useState(false);
+
+  const { bookingDetails } = location.state || {};
+
+  if (!bookingDetails) {
+    return <div>Error: No booking details provided.</div>;
+  }
 
   const handlePayment = () => {
     if (selectedOption === "stripe") {
