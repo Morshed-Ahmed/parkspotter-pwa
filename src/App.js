@@ -11,6 +11,9 @@ import Ticket from "./Components/Ticket/Ticket.component";
 import Home from "./Components/Home/Home/Home";
 import PersonalInformation from "./Components/Profile/PersonalInformation/PersonalInformation";
 import History from "./Components/Profile/History/History";
+import TermsAndConditions from "./Components/TermsAndConditions/TermsAndConditions.component";
+// import TicketHistory from "./Components/TicketHistory/TicketHistory.component";
+import DetailedInvoice from "./Components/DetailedInvoice/DetailedInvoice.component";
 
 function App() {
   return (
@@ -27,6 +30,8 @@ function App() {
         <Route path="/slot/:slotNumber" element={<SlotBookingForm />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/ticket" element={<Ticket />} />
+        <Route path="/ticket/:ticketNo" element={<DetailedInvoice />} />
+        <Route path="/terms" element={<TermsAndConditions />} />
       </Routes>
     </Router>
   );

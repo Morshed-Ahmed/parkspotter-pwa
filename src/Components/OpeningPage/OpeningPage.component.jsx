@@ -1,6 +1,7 @@
-import React from "react"
-import styled from "styled-components"
-import logo from "../../Assets/Logo/ParkSpotterLogoWhite.svg"
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import logo from "../../Assets/Logo/ParkSpotterLogoWhite.svg";
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -11,30 +12,30 @@ const PageWrapper = styled.div`
   background: radial-gradient(circle at center, #606163, #202123);
   padding: 1rem;
   color: #ffffff;
-`
+`;
 
 const Header = styled.header`
   text-align: center;
   margin-bottom: 2rem;
-`
+`;
 
 const Title = styled.h1`
   font-size: 2.5rem;
   font-weight: bold;
   color: #ffffff;
-`
+`;
 
 const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
+`;
 
 const Logo = styled.img`
   width: 8rem;
   height: 8rem;
   margin-bottom: 2rem;
-`
+`;
 
 const Button = styled.button`
   background-color: coral;
@@ -50,9 +51,19 @@ const Button = styled.button`
     background-color: #202123;
     color: coral;
   }
-`
+`;
 
 const OpeningPage = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate("/login");
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, [navigate]);
+
   return (
     <PageWrapper>
       <Header>
@@ -63,7 +74,7 @@ const OpeningPage = () => {
         <Button>Find Parking Now</Button>
       </Main>
     </PageWrapper>
-  )
-}
+  );
+};
 
-export default OpeningPage
+export default OpeningPage;

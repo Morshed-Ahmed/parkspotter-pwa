@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import styled from "styled-components"
 import carIcon from "../../Assets/CarIcon/caricon.png"
+import Header from "../SharedComponents/Header/Header"
 
 const Container = styled.div`
   padding: 20px;
@@ -18,17 +19,21 @@ const Title = styled.h1`
 
 const Filters = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   background-color: coral;
   padding: 10px 25px;
   border-radius: 5px;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    justify-content: space-evenly;
+  }
 `
 
 const Filter = styled.select`
-  padding: 10px;
+  padding: 5px 10px;
   border-radius: 25px;
   border: 1px solid #fff;
   background-color: #fff;
@@ -44,12 +49,12 @@ const ParkingLotContainer = styled.div`
 
 const ZoneContainer = styled.div`
   border: 2px dashed #aaa;
-  padding: 10px;
+  // padding: 10px;
   margin-top: 30px;
   position: relative;
   border-left: 0;
   border-right: 0;
-
+  margin-bottom: 20px;
   &:first-of-type {
     border-top: 2px dashed #aaa;
   }
@@ -60,20 +65,20 @@ const ZoneContainer = styled.div`
 
 const ZoneTitle = styled.h2`
   position: absolute;
-  top: -50px;
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
   background: #202123;
   color: #fff;
   padding: 3px 15px;
-  font-size: 1em;
+  font-size: 0.8rem;
   border-radius: 25px;
 `
 
 const SlotRow = styled.div`
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 5px;
   flex-wrap: wrap;
 `
 
@@ -90,11 +95,11 @@ const Slot = styled.div`
   cursor: pointer;
   color: #202123;
   &:hover {
-    background-color: ${(props) => (props.booked ? "coral" : "#ccffcc")};
+    background-color: ${(props) => (props.booked ? "#ddd" : "#ccffcc")};
   }
 
   @media (max-width: 768px) {
-    width: 80px;
+    width: 90px;
     height: 130px;
   }
 `
@@ -102,14 +107,14 @@ const Slot = styled.div`
 const CarIcon = styled.img`
   width: 95%;
   height: 60%;
-  margin-top: 15px;
+  margin-top: 30px;
 `
 
 const SlotText = styled.div`
   position: absolute;
-  top: 2px;
-  right: 5px;
-  background-color: #fff;
+  top: 10px;
+  right: 12px;
+  background-color: transparent;
   border: 2px solid ${(props) => (props.booked ? "#202123" : "blue")};
   border-radius: 35px;
   padding: 2px 7px;
@@ -120,6 +125,22 @@ const SlotText = styled.div`
 
   @media (max-width: 768px) {
     padding: 1px 7px;
+    top: 10px;
+    right: 6px;
+  }
+`
+
+const SlotNumber = styled(SlotText)`
+  top: 40%;
+  right: 17%;
+  background-color: green;
+  color: #fff;
+  border: 0;
+  padding: 10px 15px;
+  @media (max-width: 768px) {
+    padding: 10px 15px;
+
+    right: 13%;
   }
 `
 
@@ -177,6 +198,7 @@ const LocationDetail = () => {
   const zones = Array.from(new Set(parkingSlots.map((slot) => slot.zone)))
 
   return (
+    <><Header/>
     <Container>
       <Title>Choose Parking Spot</Title>
       <Filters>
@@ -216,7 +238,7 @@ const LocationDetail = () => {
                     {slot.booked ? (
                       <CarIcon src={carIcon} alt="Car Icon" />
                     ) : (
-                      <SlotText>{slot.slotNumber}</SlotText>
+                      <SlotNumber>Slot&nbsp;{slot.slotNumber}</SlotNumber>
                     )}
                     <SlotText booked={slot.booked}>
                       {slot.booked ? "Occupied" : "Available"}
@@ -227,7 +249,7 @@ const LocationDetail = () => {
           </ZoneContainer>
         ))}
       </ParkingLotContainer>
-    </Container>
+    </Container></>
   )
 }
 
