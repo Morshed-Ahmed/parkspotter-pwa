@@ -1,5 +1,5 @@
-import React from "react"
-import { useNavigate } from "react-router-dom"
+import React, { useEffect } from "react"
+import { useNavigate, useLocation } from "react-router-dom"
 import styled from "styled-components"
 import Header from "../../SharedComponents/Header/Header"
 import { FaMapMarkerAlt, FaFileInvoice, FaUser } from "react-icons/fa"
@@ -57,6 +57,22 @@ const MenuItem = styled.button`
 
 const Home = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const token = params.get("token")
+    const user_id = params.get("user_id")
+    const role = params.get("role")
+
+    if (token && user_id && role) {
+      localStorage.setItem("token", token)
+      localStorage.setItem("user_id", user_id)
+      localStorage.setItem("role", role)
+    } else {
+      navigate("/signin")
+    }
+  }, [location, navigate])
 
   return (
     <>
