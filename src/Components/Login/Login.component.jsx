@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 
 const PageWrapper = styled.div`
@@ -64,6 +64,21 @@ const ErrorMessage = styled.p`
   margin: 0.5rem 0;
 `;
 
+const SignupLink = styled.p`
+  margin-top: 1rem;
+  color: #202123;
+
+  a {
+    color: coral;
+    text-decoration: none;
+    font-weight: bold;
+    
+    &:hover {
+      color: #202123;
+    }
+  }
+`;
+
 const LoginPage = () => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -117,6 +132,9 @@ const LoginPage = () => {
           {error && <ErrorMessage>{error}</ErrorMessage>}
           <Button type="submit">Login</Button>
         </form>
+        <SignupLink>
+          Don't have an account? <Link to="/signup">Sign up</Link>
+        </SignupLink>
       </FormWrapper>
     </PageWrapper>
   );

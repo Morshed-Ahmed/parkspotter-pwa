@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const NavbarContainer = styled.div`
@@ -11,9 +11,15 @@ const NavbarContainer = styled.div`
   color: #fff;
 `;
 
-const Logo = styled.div`
-  font-size: 20px;
+const Logo = styled(Link)`
+  font-size: 18px;
   font-weight: bold;
+  text-decoration: none;
+  color: #fff;
+
+  @media (min-width: 600px) {
+    font-size: 20px;
+  }
 `;
 
 const ProfileContainer = styled.div`
@@ -28,6 +34,10 @@ const ProfileButton = styled.button`
   cursor: pointer;
   display: flex;
   align-items: center;
+
+  @media (min-width: 600px) {
+    font-size: 18px;
+  }
 `;
 
 const ProfileDropdown = styled.div`
@@ -40,15 +50,24 @@ const ProfileDropdown = styled.div`
   border-radius: 5px;
   overflow: hidden;
   z-index: 1000;
+  width: 150px;
+
+  @media (min-width: 600px) {
+    width: 200px;
+  }
 `;
 
 const DropdownItem = styled(NavLink)`
   display: block;
-  padding: 10px 20px;
+  padding: 10px;
   color: #333;
   text-decoration: none;
   &:hover {
     background-color: #f1f1f1;
+  }
+
+  @media (min-width: 600px) {
+    padding: 10px 20px;
   }
 `;
 
@@ -57,6 +76,11 @@ const ProfileImage = styled.img`
   height: 30px;
   border-radius: 50%;
   margin-right: 10px;
+
+  @media (min-width: 600px) {
+    width: 35px;
+    height: 35px;
+  }
 `;
 
 const Header = () => {
@@ -84,7 +108,7 @@ const Header = () => {
 
   return (
     <NavbarContainer>
-      <Logo>ParkSpotter</Logo>
+      <Logo to={"/home"}>ParkSpotter</Logo>
       <ProfileContainer>
         <ProfileButton id="profile-dropdown" onClick={toggleDropdown}>
           <ProfileImage src="https://via.placeholder.com/30" alt="Profile" />
@@ -94,7 +118,7 @@ const Header = () => {
           <ProfileDropdown>
             <DropdownItem to={"/profile"}>Profile</DropdownItem>
             <DropdownItem to={"/history"}>History</DropdownItem>
-            <DropdownItem>Logout</DropdownItem>
+            <DropdownItem as="div">Logout</DropdownItem>
           </ProfileDropdown>
         )}
       </ProfileContainer>
