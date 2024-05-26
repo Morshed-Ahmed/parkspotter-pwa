@@ -70,7 +70,7 @@ const Home = () => {
       localStorage.setItem("user_id", user_id)
       localStorage.setItem("role", role)
     } else {
-      navigate("/signin")
+      navigate("/login")
     }
   }, [location, navigate])
 
