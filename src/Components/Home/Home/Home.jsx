@@ -3,6 +3,11 @@ import { useNavigate, useLocation } from "react-router-dom"
 import styled from "styled-components"
 import Header from "../../SharedComponents/Header/Header"
 import { FaMapMarkerAlt, FaFileInvoice, FaUser } from "react-icons/fa"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  selectRedirectedFlag,
+  setRedirectedFlag,
+} from "../../../Store/User/userSlice"
 
 const HomeContainer = styled.div`
   display: flex;
@@ -58,20 +63,24 @@ const MenuItem = styled.button`
 const Home = () => {
   const navigate = useNavigate()
   const location = useLocation()
-
+  const dispatch = useDispatch()
+  const redirectedFlag = useSelector(selectRedirectedFlag)
   useEffect(() => {
-    const params = new URLSearchParams(location.search)
-    const token = params.get("token")
-    const user_id = params.get("user_id")
-    const role = params.get("role")
+    if (redirectedFlag) {
+      const params = new URLSearchParams(location.search)
+      const token = params.get("token")
+      const user_id = params.get("user_id")
+      const role = params.get("role")
 
-    if (token && user_id && role) {
-      localStorage.setItem("token", token)
-      localStorage.setItem("user_id", user_id)
-      localStorage.setItem("role", role)
-    } else {
-      navigate("/login")
+      if (token && user_id && role) {
+        localStorage.setItem("token", token)
+        localStorage.setItem("user_id", user_id)
+        localStorage.setItem("role", role)
+      } else {
+        navigate("/login")
+      }
     }
+    dispatch(setRedirectedFlag(false))
   }, [location, navigate])
 
   return (
