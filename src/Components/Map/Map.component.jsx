@@ -25,27 +25,7 @@ const SearchBox = styled.div`
   max-width: 400px;
 `
 
-const ZoomControls = styled.div`
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  display: flex;
-  flex-direction: column;
-  z-index: 1;
-`
 
-const ZoomButton = styled.button`
-  background-color: #ffffff;
-  border: none;
-  padding: 10px;
-  margin: 5px 0;
-  cursor: pointer;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  &:hover {
-    background-color: #f0f0f0;
-  }
-`
 
 const Map = () => {
   const mapContainerRef = useRef(null)
