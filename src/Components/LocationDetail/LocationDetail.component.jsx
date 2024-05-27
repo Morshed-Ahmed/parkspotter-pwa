@@ -5,35 +5,41 @@ import carIcon from "../../Assets/CarIcon/caricon.png"
 import Header from "../SharedComponents/Header/Header"
 
 const Container = styled.div`
-  padding: 20px;
-  background-color: #f6f6f6;
+  // padding: 20px;
+  background-color: #fff;
   height: 100dvh;
+  @media (max-width: 768px) {
+    padding: 0px;
+  }
 `
 
 const Title = styled.h1`
   text-align: center;
-  margin-bottom: 20px;
-  font-size: 1.5em;
+  margin-bottom: 50px;
+  font-size: 1.7em;
   color: #202123;
+  margin-top: 30px;
+  text-decoration: underline;
 `
 
 const Filters = styled.div`
   display: flex;
   justify-content: center;
-  background-color: coral;
-  padding: 10px 25px;
-  border-radius: 5px;
+  background-color: #202123;
+  padding: 25px 25px;
+  // border-radius: 5px;
   gap: 10px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
 
   @media (max-width: 768px) {
     justify-content: space-evenly;
+    border-radius: 0px;
   }
 `
 
 const Filter = styled.select`
-  padding: 5px 10px;
+  padding: 9px 10px;
   border-radius: 25px;
   border: 1px solid #fff;
   background-color: #fff;
@@ -48,19 +54,19 @@ const ParkingLotContainer = styled.div`
 `
 
 const ZoneContainer = styled.div`
-  border: 2px dashed #aaa;
-  // padding: 10px;
+  // border: 2px solid #222;
   margin-top: 30px;
   position: relative;
   border-left: 0;
   border-right: 0;
   margin-bottom: 20px;
-  &:first-of-type {
-    border-top: 2px dashed #aaa;
-  }
-  &:last-of-type {
-    border-bottom: 2px dashed #aaa;
-  }
+  // background-color: #202123;
+  // &:first-of-type {
+  //   border-top: 2px dashed #222;
+  // }
+  // &:last-of-type {
+  //   border-bottom: 2px solid #222;
+  // }
 `
 
 const ZoneTitle = styled.h2`
@@ -70,7 +76,7 @@ const ZoneTitle = styled.h2`
   transform: translateX(-50%);
   background: #202123;
   color: #fff;
-  padding: 3px 15px;
+  padding: 8px 18px;
   font-size: 0.8rem;
   border-radius: 25px;
 `
@@ -78,22 +84,25 @@ const ZoneTitle = styled.h2`
 const SlotRow = styled.div`
   display: flex;
   justify-content: center;
-  gap: 5px;
+  gap: 25px;
   flex-wrap: wrap;
+  margin: 10px 0;
 `
 
 const Slot = styled.div`
-  width: 100px;
-  height: 160px;
-  border-left: 2px dashed #aaa;
-  border-right: 2px dashed #aaa;
+  width: 200px;
+  height: 300px;
+  border: 2px solid #aaa;
+  box-sizing: content-box;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f6f6f6;
+  background-color: #e5e5ff;
   position: relative;
+  border-radius: 10px;
   cursor: pointer;
   color: #202123;
+  // box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
   &:hover {
     background-color: ${(props) => (props.booked ? "#ddd" : "#ccffcc")};
   }
@@ -101,6 +110,8 @@ const Slot = styled.div`
   @media (max-width: 768px) {
     width: 90px;
     height: 130px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
+
   }
 `
 
@@ -114,49 +125,90 @@ const SlotText = styled.div`
   position: absolute;
   top: 10px;
   right: 12px;
-  background-color: transparent;
-  border: 2px solid ${(props) => (props.booked ? "#202123" : "blue")};
+  box-sizing: content-box;
+
+  background-color: ${(props) => (props.booked ? "#202123" : "#fff")};
+  border: 2px solid ${(props) => (props.booked ? "#666" : "rgb(0,0,255,0.7)")};
   border-radius: 35px;
   padding: 2px 7px;
   font-size: 12px;
   font-weight: bold;
   text-align: center;
-  color: ${(props) => (props.booked ? "#202123" : "#202123")};
+  color: ${(props) => (props.booked ? "#fff" : "#202123")};
 
   @media (max-width: 768px) {
-    padding: 1px 7px;
+    padding: 3px 8px;
     top: 10px;
-    right: 6px;
+    right: 8px;
   }
 `
 
 const SlotNumber = styled(SlotText)`
-  top: 40%;
-  right: 17%;
-  background-color: green;
-  color: #fff;
-  border: 0;
-  padding: 10px 15px;
+  top: 6%;
+  right: 3.5%;
+  background-color: #fff;
+  color: #202123;
+  border: 1px solid #202123;
+  padding: 18px 10px;
+  font-weight: 700;
   @media (max-width: 768px) {
-    padding: 10px 15px;
-
-    right: 13%;
+    padding: 18px 10px;
   }
 `
 
+const SlotNumberCircle = styled.div`
+  border: 1px solid #202123;
+  padding: 30px;
+  background-color: rgb(0, 0, 255, 0.5);
+  border-radius: 56px;
+  position: absolute;
+  top: 40%;
+`
+
 const LocationDetail = () => {
-  const { id } = useParams()
+  const { id } = useParams() // Assuming parkowner ID is passed as a URL param
   const navigate = useNavigate()
   const [parkingSlots, setParkingSlots] = useState([])
+  const [zone, setZone] = useState(null)
   const [zoneFilter, setZoneFilter] = useState("all")
   const [availabilityFilter, setAvailabilityFilter] = useState("all")
 
   useEffect(() => {
-    const fetchParkingSlots = async () => {
+    const fetchZone = async () => {
       try {
-        const response = await fetch(`/api/parking-lot/${id}`)
+        const response = await fetch(
+          `https://parkspotter-backened.onrender.com/accounts/zone/`
+        )
         const data = await response.json()
-        setParkingSlots(data.slots)
+        const zoneInfo = data.find((zone) => zone.park_owner === parseInt(id))
+        setZone(zoneInfo ? zoneInfo.id : null) // Assuming response has a zone field
+      } catch (error) {
+        console.error("Error fetching zone:", error)
+      }
+    }
+
+    if (id) {
+      fetchZone()
+    }
+  }, [id])
+
+  useEffect(() => {
+    const fetchParkingSlots = async () => {
+      if (!zone) return
+
+      try {
+        const response = await fetch(
+          `https://parkspotter-backened.onrender.com/accounts/slot/`
+        )
+        const data = await response.json()
+
+        const transformedData = data.map((slot) => ({
+          slotNumber: slot.slot_number,
+          zone: slot.zone,
+          booked: !slot.available,
+        }))
+
+        setParkingSlots(transformedData.filter((slot) => slot.zone === zone))
       } catch (error) {
         console.error("Error fetching parking slots:", error)
         const dummyData = [
@@ -175,12 +227,12 @@ const LocationDetail = () => {
             userEmail: "user2@example.com",
           },
         ]
-        setParkingSlots(dummyData)
+        setParkingSlots(dummyData.filter((slot) => slot.zone === zone))
       }
     }
 
     fetchParkingSlots()
-  }, [id])
+  }, [zone])
 
   const handleSlotClick = (slot) => {
     if (!slot.booked) {
@@ -198,60 +250,65 @@ const LocationDetail = () => {
   const zones = Array.from(new Set(parkingSlots.map((slot) => slot.zone)))
 
   return (
-    <><Header/>
-    <Container>
-      <Title>Choose Parking Spot</Title>
-      <Filters>
-        <Filter
-          value={zoneFilter}
-          onChange={(e) => setZoneFilter(e.target.value)}
-        >
-          <option value="all">All Zones</option>
+    <>
+      <Header />
+      <Container>
+        <Filters>
+          <Filter
+            value={zoneFilter}
+            onChange={(e) => setZoneFilter(e.target.value)}
+          >
+            <option value="all">All Zones</option>
+            {zones.map((zone) => (
+              <option key={zone} value={zone}>
+                Zone {zone}
+              </option>
+            ))}
+          </Filter>
+          <Filter
+            value={availabilityFilter}
+            onChange={(e) => setAvailabilityFilter(e.target.value)}
+          >
+            <option value="all">All</option>
+            <option value="available">Available</option>
+            <option value="unavailable">Unavailable</option>
+          </Filter>
+        </Filters>
+        <Title>Choose Parking Spot</Title>
+
+        <ParkingLotContainer>
           {zones.map((zone) => (
-            <option key={zone} value={zone}>
-              Zone {zone}
-            </option>
+            <ZoneContainer key={zone}>
+              <ZoneTitle>Zone {zone}</ZoneTitle>
+              <SlotRow>
+                {filteredSlots
+                  .filter((slot) => slot.zone === zone)
+                  .map((slot) => (
+                    <Slot
+                      key={slot.slotNumber}
+                      booked={slot.booked}
+                      onClick={() => handleSlotClick(slot)}
+                    >
+                      {slot.booked ? (
+                        <CarIcon src={carIcon} alt="Car Icon" />
+                      ) : (
+                        <SlotNumberCircle>
+                          {" "}
+                          <SlotNumber>Slot&nbsp;{slot.slotNumber}</SlotNumber>
+                        </SlotNumberCircle>
+                      )}
+                      <SlotText booked={slot.booked}>
+                        {slot.booked ? "Occupied" : "Available"}
+                      </SlotText>
+                    </Slot>
+                  ))}
+              </SlotRow>
+            </ZoneContainer>
           ))}
-        </Filter>
-        <Filter
-          value={availabilityFilter}
-          onChange={(e) => setAvailabilityFilter(e.target.value)}
-        >
-          <option value="all">All</option>
-          <option value="available">Available</option>
-          <option value="unavailable">Unavailable</option>
-        </Filter>
-      </Filters>
-      <ParkingLotContainer>
-        {zones.map((zone) => (
-          <ZoneContainer key={zone}>
-            <ZoneTitle>Zone {zone}</ZoneTitle>
-            <SlotRow>
-              {filteredSlots
-                .filter((slot) => slot.zone === zone)
-                .map((slot) => (
-                  <Slot
-                    key={slot.slotNumber}
-                    booked={slot.booked}
-                    onClick={() => handleSlotClick(slot)}
-                  >
-                    {slot.booked ? (
-                      <CarIcon src={carIcon} alt="Car Icon" />
-                    ) : (
-                      <SlotNumber>Slot&nbsp;{slot.slotNumber}</SlotNumber>
-                    )}
-                    <SlotText booked={slot.booked}>
-                      {slot.booked ? "Occupied" : "Available"}
-                    </SlotText>
-                  </Slot>
-                ))}
-            </SlotRow>
-          </ZoneContainer>
-        ))}
-      </ParkingLotContainer>
-    </Container></>
+        </ParkingLotContainer>
+      </Container>
+    </>
   )
 }
 
 export default LocationDetail
-// original
