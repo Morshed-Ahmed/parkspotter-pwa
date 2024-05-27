@@ -1,211 +1,3 @@
-// import React, { useState } from "react";
-// import styled from "styled-components";
-
-// const ProfileContainer = styled.div`
-//   padding: 20px;
-//   max-width: 800px;
-//   margin: 0 auto;
-//   background-color: #f9f9f9;
-//   border-radius: 10px;
-//   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-// `;
-
-// const ProfilePicture = styled.div`
-//   width: 100px;
-//   height: 100px;
-//   border-radius: 50%;
-//   background-color: #ccc;
-//   background-image: url("https://via.placeholder.com/100"); // Replace with actual image URL
-//   background-size: cover;
-//   background-position: center;
-//   margin-bottom: 20px;
-// `;
-
-// const ProfileField = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: flex-start;
-//   margin-bottom: 10px;
-//   width: 300px;
-// `;
-
-// const Label = styled.label`
-//   font-size: 14px;
-//   color: #666;
-//   margin-bottom: 5px;
-// `;
-
-// const Input = styled.input`
-//   width: 100%;
-//   padding: 10px;
-//   font-size: 16px;
-//   border: 1px solid #ccc;
-//   border-radius: 5px;
-//   background-color: #f5f5f5;
-//   &:disabled {
-//     background-color: #e9ecef;
-//   }
-// `;
-
-// const ButtonContainer = styled.div`
-//   display: flex;
-//   gap: 10px;
-//   margin-top: 20px;
-// `;
-
-// const EditButton = styled.button`
-//   padding: 10px 20px;
-//   font-size: 16px;
-//   color: #fff;
-//   background-color: #007bff;
-//   border: none;
-//   border-radius: 5px;
-//   cursor: pointer;
-//   &:hover {
-//     background-color: #0056b3;
-//   }
-// `;
-
-// const CancelButton = styled.button`
-//   padding: 10px 20px;
-//   font-size: 16px;
-//   color: #007bff;
-//   background-color: #fff;
-//   border: 1px solid #007bff;
-//   border-radius: 5px;
-//   cursor: pointer;
-//   &:hover {
-//     background-color: #e9ecef;
-//   }
-// `;
-
-// const SaveButton = styled.button`
-//   padding: 10px 20px;
-//   font-size: 16px;
-//   color: #fff;
-//   background-color: #28a745;
-//   border: none;
-//   border-radius: 5px;
-//   cursor: pointer;
-//   &:hover {
-//     background-color: #218838;
-//   }
-//   &:disabled {
-//     background-color: #c3e6cb;
-//     cursor: not-allowed;
-//   }
-// `;
-
-// const PersonalInformation = () => {
-//   const [isEditing, setIsEditing] = useState(false);
-//   const [formValues, setFormValues] = useState({
-//     fullName: "Md. Morshed Ahmed",
-//     email: "morshed.dv@gmail.com",
-//     phone: "+8801934981700",
-//     currentPassword: "",
-//     newPassword: "",
-//     confirmPassword: "",
-//   });
-
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormValues({ ...formValues, [name]: value });
-//   };
-
-//   const handleEditClick = () => {
-//     setIsEditing(true);
-//   };
-
-//   const handleCancelClick = () => {
-//     setIsEditing(false);
-//   };
-
-//   const handleSaveClick = () => {
-//     // Save changes logic here
-//     setIsEditing(false);
-//   };
-
-//   return (
-//     <ProfileContainer>
-//       <ProfilePicture />
-//       <ProfileField>
-//         <Label>Full name</Label>
-//         <Input
-//           type="text"
-//           name="fullName"
-//           value={formValues.fullName}
-//           onChange={handleInputChange}
-//           disabled={!isEditing}
-//         />
-//       </ProfileField>
-//       <ProfileField>
-//         <Label>Email Address</Label>
-//         <Input
-//           type="email"
-//           name="email"
-//           value={formValues.email}
-//           onChange={handleInputChange}
-//           disabled={!isEditing}
-//         />
-//       </ProfileField>
-//       <ProfileField>
-//         <Label>Phone</Label>
-//         <Input
-//           type="tel"
-//           name="phone"
-//           value={formValues.phone}
-//           onChange={handleInputChange}
-//           disabled={!isEditing}
-//         />
-//       </ProfileField>
-//       {isEditing && (
-//         <>
-//           <ProfileField>
-//             <Label>Password</Label>
-//             <Input
-//               type="password"
-//               name="currentPassword"
-//               placeholder="Current Password"
-//               value={formValues.currentPassword}
-//               onChange={handleInputChange}
-//             />
-//           </ProfileField>
-//           <ProfileField>
-//             <Input
-//               type="password"
-//               name="newPassword"
-//               placeholder="New Password"
-//               value={formValues.newPassword}
-//               onChange={handleInputChange}
-//             />
-//           </ProfileField>
-//           <ProfileField>
-//             <Input
-//               type="password"
-//               name="confirmPassword"
-//               placeholder="Retype Password"
-//               value={formValues.confirmPassword}
-//               onChange={handleInputChange}
-//             />
-//           </ProfileField>
-//         </>
-//       )}
-//       <ButtonContainer>
-//         {isEditing ? (
-//           <>
-//             <CancelButton onClick={handleCancelClick}>Cancel</CancelButton>
-//             <SaveButton onClick={handleSaveClick}>Save Changes</SaveButton>
-//           </>
-//         ) : (
-//           <EditButton onClick={handleEditClick}>Edit Profile</EditButton>
-//         )}
-//       </ButtonContainer>
-//     </ProfileContainer>
-//   );
-// };
-
-// export default PersonalInformation;
-
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -348,10 +140,13 @@ export const BackButton = styled(NavLink)`
 const PersonalInformation = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [formValues, setFormValues] = useState({
-    fullName: "",
+    username: "",
     email: "",
+    first_name: "",
+    last_name: "",
     mobile_no: "",
-    address: "",
+    vehicle_brand: "",
+    plate_number: "",
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
@@ -360,23 +155,27 @@ const PersonalInformation = () => {
   const user_id = localStorage.getItem("user_id");
 
   useEffect(() => {
-    fetch(
-      `https://parkspotter-backened.onrender.com/accounts/profile/${user_id}`
-    )
+    fetch(`https://parkspotter-backened.onrender.com/customer/customer-list/`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        const userData = data.find(
+          (customer) => customer.customer_id.id === parseInt(user_id)
+        );
 
-        setFormValues({
-          username: data.park_owner_id.username || "",
-          email: data.park_owner_id.email || "",
-          mobile_no: data.mobile_no || "",
-          address: data.address || "",
-
-          currentPassword: "",
-          newPassword: "",
-          confirmPassword: "",
-        });
+        if (userData) {
+          setFormValues({
+            username: userData.customer_id.username || "",
+            email: userData.customer_id.email || "",
+            first_name: userData.customer_id.first_name || "",
+            last_name: userData.customer_id.last_name || "",
+            mobile_no: userData.mobile_no || "",
+            vehicle_brand: userData.vehicle_brand || "",
+            plate_number: userData.plate_number || "",
+            currentPassword: "",
+            newPassword: "",
+            confirmPassword: "",
+          });
+        }
       });
   }, [user_id]);
 
@@ -394,24 +193,23 @@ const PersonalInformation = () => {
   };
 
   const handleSaveClick = () => {
-    fetch(
-      `https://parkspotter-backened.onrender.com/accounts/profile/${user_id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          username: formValues.username,
-          email: formValues.email,
-          mobile_no: formValues.mobile_no,
-          address: formValues.address,
-
-          password: formValues.newPassword,
-        }),
-      }
-    )
+    fetch(`https://parkspotter-backened.onrender.com/customer/customer-list/${user_id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        username: formValues.username,
+        email: formValues.email,
+        first_name: formValues.first_name,
+        last_name: formValues.last_name,
+        mobile_no: formValues.mobile_no,
+        vehicle_brand: formValues.vehicle_brand,
+        plate_number: formValues.plate_number,
+        password: formValues.newPassword,
+      }),
+    })
       .then((res) => res.json())
       .then((data) => {
         console.log("Profile updated:", data);
@@ -463,6 +261,26 @@ const PersonalInformation = () => {
             />
           </ProfileField>
           <ProfileField>
+            <Label>First Name</Label>
+            <Input
+              type="text"
+              name="first_name"
+              value={formValues.first_name}
+              onChange={handleInputChange}
+              disabled={!isEditing}
+            />
+          </ProfileField>
+          <ProfileField>
+            <Label>Last Name</Label>
+            <Input
+              type="text"
+              name="last_name"
+              value={formValues.last_name}
+              onChange={handleInputChange}
+              disabled={!isEditing}
+            />
+          </ProfileField>
+          <ProfileField>
             <Label>Phone</Label>
             <Input
               type="tel"
@@ -473,11 +291,21 @@ const PersonalInformation = () => {
             />
           </ProfileField>
           <ProfileField>
-            <Label>Address</Label>
+            <Label>Vehicle Brand</Label>
             <Input
-              type="tel"
-              name="address"
-              value={formValues.address}
+              type="text"
+              name="vehicle_brand"
+              value={formValues.vehicle_brand}
+              onChange={handleInputChange}
+              disabled={!isEditing}
+            />
+          </ProfileField>
+          <ProfileField>
+            <Label>Plate Number</Label>
+            <Input
+              type="text"
+              name="plate_number"
+              value={formValues.plate_number}
               onChange={handleInputChange}
               disabled={!isEditing}
             />

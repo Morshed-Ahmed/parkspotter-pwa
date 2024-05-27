@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import styled from "styled-components"
-import carIcon from "../../Assets/CarIcon/caricon.png"
-import Header from "../SharedComponents/Header/Header"
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import carIcon from "../../Assets/CarIcon/caricon.png";
+import Header from "../SharedComponents/Header/Header";
 
 const Container = styled.div`
   padding: 20px;
   background-color: #f6f6f6;
   height: 100dvh;
-`
+`;
 
 const Title = styled.h1`
   text-align: center;
   margin-bottom: 20px;
   font-size: 1.5em;
   color: #202123;
-`
+`;
 
 const Filters = styled.div`
   display: flex;
@@ -30,7 +30,7 @@ const Filters = styled.div`
   @media (max-width: 768px) {
     justify-content: space-evenly;
   }
-`
+`;
 
 const Filter = styled.select`
   padding: 5px 10px;
@@ -39,17 +39,16 @@ const Filter = styled.select`
   background-color: #fff;
   color: #202123;
   font-size: 0.8rem;
-`
+`;
 
 const ParkingLotContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-`
+`;
 
 const ZoneContainer = styled.div`
   border: 2px dashed #aaa;
-  // padding: 10px;
   margin-top: 30px;
   position: relative;
   border-left: 0;
@@ -61,7 +60,7 @@ const ZoneContainer = styled.div`
   &:last-of-type {
     border-bottom: 2px dashed #aaa;
   }
-`
+`;
 
 const ZoneTitle = styled.h2`
   position: absolute;
@@ -73,14 +72,14 @@ const ZoneTitle = styled.h2`
   padding: 3px 15px;
   font-size: 0.8rem;
   border-radius: 25px;
-`
+`;
 
 const SlotRow = styled.div`
   display: flex;
   justify-content: center;
   gap: 5px;
   flex-wrap: wrap;
-`
+`;
 
 const Slot = styled.div`
   width: 100px;
@@ -102,13 +101,13 @@ const Slot = styled.div`
     width: 90px;
     height: 130px;
   }
-`
+`;
 
 const CarIcon = styled.img`
   width: 95%;
   height: 60%;
   margin-top: 30px;
-`
+`;
 
 const SlotText = styled.div`
   position: absolute;
@@ -128,7 +127,7 @@ const SlotText = styled.div`
     top: 10px;
     right: 6px;
   }
-`
+`;
 
 const SlotNumber = styled(SlotText)`
   top: 40%;
@@ -139,27 +138,56 @@ const SlotNumber = styled(SlotText)`
   padding: 10px 15px;
   @media (max-width: 768px) {
     padding: 10px 15px;
-
     right: 13%;
   }
-`
-
+`;
 
 const LocationDetail = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const [parkingSlots, setParkingSlots] = useState([])
-  const [zoneFilter, setZoneFilter] = useState("all")
-  const [availabilityFilter, setAvailabilityFilter] = useState("all")
+  const { id } = useParams(); // Assuming parkowner ID is passed as a URL param
+  const navigate = useNavigate();
+  const [parkingSlots, setParkingSlots] = useState([]);
+  const [zone, setZone] = useState(null);
+  const [zoneFilter, setZoneFilter] = useState("all");
+  const [availabilityFilter, setAvailabilityFilter] = useState("all");
+
+  useEffect(() => {
+    const fetchZone = async () => {
+      try {
+        const response = await fetch(
+          `https://parkspotter-backened.onrender.com/accounts/zone/`
+        );
+        const data = await response.json();
+        const zoneInfo = data.find((zone) => zone.park_owner === parseInt(id));
+        setZone(zoneInfo ? zoneInfo.id : null); // Assuming response has a zone field
+      } catch (error) {
+        console.error("Error fetching zone:", error);
+      }
+    };
+
+    if (id) {
+      fetchZone();
+    }
+  }, [id]);
 
   useEffect(() => {
     const fetchParkingSlots = async () => {
+      if (!zone) return;
+
       try {
-        const response = await fetch(`/api/parking-lot/${id}`)
-        const data = await response.json()
-        setParkingSlots(data.slots)
+        const response = await fetch(
+          `https://parkspotter-backened.onrender.com/accounts/slot/`
+        );
+        const data = await response.json();
+
+        const transformedData = data.map((slot) => ({
+          slotNumber: slot.slot_number,
+          zone: slot.zone,
+          booked: !slot.available,
+        }));
+
+        setParkingSlots(transformedData.filter(slot => slot.zone === zone));
       } catch (error) {
-        console.error("Error fetching parking slots:", error)
+        console.error("Error fetching parking slots:", error);
         const dummyData = [
           {
             slotNumber: 1,
@@ -175,84 +203,85 @@ const LocationDetail = () => {
             booked: true,
             userEmail: "user2@example.com",
           },
-        ]
-        setParkingSlots(dummyData)
+        ];
+        setParkingSlots(dummyData.filter(slot => slot.zone === zone));
       }
-    }
+    };
 
-    fetchParkingSlots()
-  }, [id])
+    fetchParkingSlots();
+  }, [zone]);
 
   const handleSlotClick = (slot) => {
     if (!slot.booked) {
-      navigate(`/slot/${slot.slotNumber}`, { state: { ...slot } })
+      navigate(`/slot/${slot.slotNumber}`, { state: { ...slot } });
     }
-  }
+  };
 
   const filteredSlots = parkingSlots.filter((slot) => {
-    if (zoneFilter !== "all" && slot.zone !== zoneFilter) return false
-    if (availabilityFilter === "available" && slot.booked) return false
-    if (availabilityFilter === "unavailable" && !slot.booked) return false
-    return true
-  })
+    if (zoneFilter !== "all" && slot.zone !== zoneFilter) return false;
+    if (availabilityFilter === "available" && slot.booked) return false;
+    if (availabilityFilter === "unavailable" && !slot.booked) return false;
+    return true;
+  });
 
-  const zones = Array.from(new Set(parkingSlots.map((slot) => slot.zone)))
+  const zones = Array.from(new Set(parkingSlots.map((slot) => slot.zone)));
 
   return (
-    <><Header/>
-    <Container>
-      <Title>Choose Parking Spot</Title>
-      <Filters>
-        <Filter
-          value={zoneFilter}
-          onChange={(e) => setZoneFilter(e.target.value)}
-        >
-          <option value="all">All Zones</option>
+    <>
+      <Header />
+      <Container>
+        <Title>Choose Parking Spot</Title>
+        <Filters>
+          <Filter
+            value={zoneFilter}
+            onChange={(e) => setZoneFilter(e.target.value)}
+          >
+            <option value="all">All Zones</option>
+            {zones.map((zone) => (
+              <option key={zone} value={zone}>
+                Zone {zone}
+              </option>
+            ))}
+          </Filter>
+          <Filter
+            value={availabilityFilter}
+            onChange={(e) => setAvailabilityFilter(e.target.value)}
+          >
+            <option value="all">All</option>
+            <option value="available">Available</option>
+            <option value="unavailable">Unavailable</option>
+          </Filter>
+        </Filters>
+        <ParkingLotContainer>
           {zones.map((zone) => (
-            <option key={zone} value={zone}>
-              Zone {zone}
-            </option>
+            <ZoneContainer key={zone}>
+              <ZoneTitle>Zone {zone}</ZoneTitle>
+              <SlotRow>
+                {filteredSlots
+                  .filter((slot) => slot.zone === zone)
+                  .map((slot) => (
+                    <Slot
+                      key={slot.slotNumber}
+                      booked={slot.booked}
+                      onClick={() => handleSlotClick(slot)}
+                    >
+                      {slot.booked ? (
+                        <CarIcon src={carIcon} alt="Car Icon" />
+                      ) : (
+                        <SlotNumber>Slot&nbsp;{slot.slotNumber}</SlotNumber>
+                      )}
+                      <SlotText booked={slot.booked}>
+                        {slot.booked ? "Occupied" : "Available"}
+                      </SlotText>
+                    </Slot>
+                  ))}
+              </SlotRow>
+            </ZoneContainer>
           ))}
-        </Filter>
-        <Filter
-          value={availabilityFilter}
-          onChange={(e) => setAvailabilityFilter(e.target.value)}
-        >
-          <option value="all">All</option>
-          <option value="available">Available</option>
-          <option value="unavailable">Unavailable</option>
-        </Filter>
-      </Filters>
-      <ParkingLotContainer>
-        {zones.map((zone) => (
-          <ZoneContainer key={zone}>
-            <ZoneTitle>Zone {zone}</ZoneTitle>
-            <SlotRow>
-              {filteredSlots
-                .filter((slot) => slot.zone === zone)
-                .map((slot) => (
-                  <Slot
-                    key={slot.slotNumber}
-                    booked={slot.booked}
-                    onClick={() => handleSlotClick(slot)}
-                  >
-                    {slot.booked ? (
-                      <CarIcon src={carIcon} alt="Car Icon" />
-                    ) : (
-                      <SlotNumber>Slot&nbsp;{slot.slotNumber}</SlotNumber>
-                    )}
-                    <SlotText booked={slot.booked}>
-                      {slot.booked ? "Occupied" : "Available"}
-                    </SlotText>
-                  </Slot>
-                ))}
-            </SlotRow>
-          </ZoneContainer>
-        ))}
-      </ParkingLotContainer>
-    </Container></>
-  )
-}
+        </ParkingLotContainer>
+      </Container>
+    </>
+  );
+};
 
-export default LocationDetail
-// original
+export default LocationDetail;
