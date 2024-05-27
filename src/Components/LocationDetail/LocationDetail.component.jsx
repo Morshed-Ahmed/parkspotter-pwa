@@ -144,6 +144,7 @@ const SlotNumber = styled(SlotText)`
   }
 `
 
+
 const LocationDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
