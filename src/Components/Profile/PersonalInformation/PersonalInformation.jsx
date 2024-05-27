@@ -153,9 +153,14 @@ const PersonalInformation = () => {
   });
 
   const user_id = localStorage.getItem("user_id");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch(`https://parkspotter-backened.onrender.com/customer/customer-list/`)
+    fetch(`https://parkspotter-backened.onrender.com/customer/customer-list/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         const userData = data.find(
@@ -177,7 +182,7 @@ const PersonalInformation = () => {
           });
         }
       });
-  }, [user_id]);
+  }, [user_id, token]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -194,24 +199,25 @@ const PersonalInformation = () => {
 
   const handleSaveClick = () => {
     const updatedProfile = {
-      username: formValues.username,
-      email: formValues.email,
-      first_name: formValues.first_name,
-      last_name: formValues.last_name,
+      id: parseInt(user_id),
+      customer_id: {
+        id: parseInt(user_id),
+        username: formValues.username,
+        email: formValues.email,
+        first_name: formValues.first_name,
+        last_name: formValues.last_name,
+      },
       mobile_no: formValues.mobile_no,
       vehicle_brand: formValues.vehicle_brand,
       plate_number: formValues.plate_number,
+      joined_date: new Date().toISOString(), 
     };
-
-    if (formValues.newPassword) {
-      updatedProfile.password = formValues.newPassword;
-    }
 
     fetch(`https://parkspotter-backened.onrender.com/customer/customer-list/${user_id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(updatedProfile),
     })
@@ -231,7 +237,7 @@ const PersonalInformation = () => {
         <BackButton to={"/home"}>
           <img
             src="https://cdn-icons-png.flaticon.com/512/109/109618.png"
-            alt=""
+            alt="Back"
           />
         </BackButton>
         <ProfileTitle>Personal Information</ProfileTitle>
