@@ -193,22 +193,27 @@ const PersonalInformation = () => {
   };
 
   const handleSaveClick = () => {
-    fetch(`https://parkspotter-backened.onrender.com/customer/customer-list/${user_id}`, {
+    const updatedProfile = {
+      username: formValues.username,
+      email: formValues.email,
+      first_name: formValues.first_name,
+      last_name: formValues.last_name,
+      mobile_no: formValues.mobile_no,
+      vehicle_brand: formValues.vehicle_brand,
+      plate_number: formValues.plate_number,
+    };
+
+    if (formValues.newPassword) {
+      updatedProfile.password = formValues.newPassword;
+    }
+
+    fetch(`https://parkspotter-backened.onrender.com/customer/customer-list/${user_id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({
-        username: formValues.username,
-        email: formValues.email,
-        first_name: formValues.first_name,
-        last_name: formValues.last_name,
-        mobile_no: formValues.mobile_no,
-        vehicle_brand: formValues.vehicle_brand,
-        plate_number: formValues.plate_number,
-        password: formValues.newPassword,
-      }),
+      body: JSON.stringify(updatedProfile),
     })
       .then((res) => res.json())
       .then((data) => {

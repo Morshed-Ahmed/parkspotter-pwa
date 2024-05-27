@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import dayjs from "dayjs";
 
 const Container = styled.div`
   padding: 20px;
@@ -30,12 +31,6 @@ const Input = styled.input`
   border: 1px solid #ccc;
 `;
 
-const Select = styled.select`
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-`;
-
 const Button = styled.button`
   padding: 10px;
   border-radius: 5px;
@@ -56,50 +51,107 @@ const Button = styled.button`
 const SlotBookingForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { slotNumber, zone, userEmail } = location.state;
+  const { slotNumber, zone } = location.state;
   const [carMake, setCarMake] = useState("");
   const [carNumber, setCarNumber] = useState("");
-  const [timeSlot, setTimeSlot] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [checkInTime, setCheckInTime] = useState("");
+  const [approxCheckOutTime, setApproxCheckOutTime] = useState("");
   const [price, setPrice] = useState(0);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    const fetchCarDetails = async () => {
+    const fetchCustomerDetails = async () => {
       try {
-        const response = await fetch(`/api/car-details/${userEmail}`);
+        const customerId = localStorage.getItem("user_id");
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(`https://parkspotter-backened.onrender.com/customer/customer-list/${customerId}/`, {
+          headers: {
+            "Authorization": `Token ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+
         const data = await response.json();
-        setCarMake(data.carMake);
-        setCarNumber(data.carNumber);
+        setUserId(data.customer_id.id);
+        setCarMake(data.vehicle_brand || "");
+        setCarNumber(data.plate_number || "");
+        setMobileNumber(data.mobile_no || "");
       } catch (error) {
-        console.error("Error fetching car details:", error);
-        // Fallback to dummy data
-        setCarMake("Toyota");
-        setCarNumber("ABC-1234");
+        console.error("Error fetching user details:", error);
       }
     };
 
-    fetchCarDetails();
-  }, [userEmail]);
+    fetchCustomerDetails();
+  }, []);
 
-  const handleTimeSlotChange = (e) => {
-    const hours = e.target.value;
-    setTimeSlot(hours);
-    setPrice(hours * 10); // Assuming $10 per hour
-  };
+  useEffect(() => {
+    if (checkInTime && approxCheckOutTime) {
+      const checkIn = dayjs(checkInTime);
+      const checkOut = dayjs(approxCheckOutTime);
+      const duration = checkOut.diff(checkIn, 'minute');
+      setPrice(duration);
+    }
+  }, [checkInTime, approxCheckOutTime]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     const bookingDetails = {
       slotNumber,
       zone,
       carMake,
       carNumber,
-      timeSlot,
+      mobileNumber,
+      checkInTime,
+      approxCheckOutTime,
       price,
-      userEmail,
       parkingLotName: "Dhaka Parking Lot",
       parkingLotAddress: "Dhaka, Bangladesh",
     };
-    navigate("/payment", { state: { bookingDetails } });
+
+    const token = localStorage.getItem("token");
+
+    const apiData = {
+      employee: null,
+      customer: userId,
+      zone: zone,
+      slot: slotNumber,
+      vehicle: {
+        plate_number: carNumber,
+        mobile_no: mobileNumber
+      },
+      check_in_time: new Date(checkInTime).toISOString(),
+      check_out_time: null,
+      appoximate_check_out_time: new Date(approxCheckOutTime).toISOString()
+    };
+
+    try {
+      const response = await fetch("https://parkspotter-backened.onrender.com/accounts/bookings/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Token ${token}`
+        },
+        body: JSON.stringify(apiData)
+      });
+      console.log(apiData);
+      console.log({apiData});
+      console.log(JSON.stringify(apiData));
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Booking response:", data);
+      navigate("/payment", { state: { bookingDetails } });
+    } catch (error) {
+      console.error("Error booking slot:", error);
+    }
   };
 
   return (
@@ -114,15 +166,29 @@ const SlotBookingForm = () => {
         <Input type="text" value={carMake} readOnly />
         <Label>Car Number</Label>
         <Input type="text" value={carNumber} readOnly />
-        <Label>Time Slot (hours)</Label>
-        <Select value={timeSlot} onChange={handleTimeSlotChange}>
-          <option value="">Select Time Slot</option>
-          {[...Array(10).keys()].map(i => (
-            <option key={i + 1} value={i + 1}>{i + 1} Hour</option>
-          ))}
-        </Select>
+        <Label>Mobile Number</Label>
+        <Input 
+          type="text" 
+          value={mobileNumber} 
+          onChange={(e) => setMobileNumber(e.target.value)} 
+          required 
+        />
+        <Label>Check-in Time</Label>
+        <Input 
+          type="datetime-local" 
+          value={checkInTime} 
+          onChange={(e) => setCheckInTime(e.target.value)} 
+          required 
+        />
+        <Label>Approximate Check-out Time</Label>
+        <Input 
+          type="datetime-local" 
+          value={approxCheckOutTime} 
+          onChange={(e) => setApproxCheckOutTime(e.target.value)} 
+          required 
+        />
         <Label>Price</Label>
-        <Input type="text" value={`$${price}`} readOnly />
+        <Input type="text" value={`৳${price}`} readOnly />
         <Button type="submit">Book Now</Button>
       </Form>
     </Container>
