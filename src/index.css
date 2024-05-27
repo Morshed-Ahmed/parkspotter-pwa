@@ -9,13 +9,15 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  font-family: "Poppins", sans-serif;
+
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
 
 .invert {
   filter: invert(1);
@@ -26,4 +28,10 @@ code {
   justify-content: center;
   width: 100%;
   max-width: 320px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }

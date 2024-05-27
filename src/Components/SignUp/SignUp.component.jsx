@@ -1,5 +1,6 @@
-import React, { useState } from "react"
-import styled from "styled-components"
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -8,7 +9,7 @@ const PageWrapper = styled.div`
   align-items: center;
   padding: 1rem;
   color: #ffffff;
-`
+`;
 
 const FormWrapper = styled.div`
   background: rgba(255, 255, 255, 0.1);
@@ -20,14 +21,14 @@ const FormWrapper = styled.div`
   width: 100%;
   max-width: 400px;
   text-align: center;
-`
+`;
 
 const Title = styled.h1`
   color: #202123;
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
-`
+`;
 
 const Input = styled.input`
   width: 100%;
@@ -37,18 +38,18 @@ const Input = styled.input`
   border: 1px solid #ccc;
   outline: none;
   font-size: 1rem;
-`
+`;
 
 const CheckboxWrapper = styled.div`
   color: #202123;
   display: flex;
   align-items: center;
   margin: 0.5rem 0;
-`
+`;
 
 const Checkbox = styled.input`
   margin-right: 0.5rem;
-`
+`;
 
 const Button = styled.button`
   width: 100%;
@@ -67,33 +68,33 @@ const Button = styled.button`
     background-color: #202123;
     color: coral;
   }
-`
+`;
 
 const ErrorMessage = styled.p`
   color: red;
   margin: 0.5rem 0;
-`
+`;
 
 const SignupPage = () => {
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [termsAccepted, setTermsAccepted] = useState(false)
-  const [error, setError] = useState("")
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError("")
+    e.preventDefault();
+    setError("");
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match")
-      return
+      setError("Passwords do not match");
+      return;
     }
 
     if (!termsAccepted) {
-      setError("You must accept the terms and conditions")
-      return
+      setError("You must accept the terms and conditions");
+      return;
     }
 
     try {
@@ -103,23 +104,23 @@ const SignupPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, email, password }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok")
+        throw new Error("Network response was not ok");
       }
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data.success) {
-        console.log("Signup successful", data)
+        console.log("Signup successful", data);
       } else {
-        setError(data.message || "Signup failed")
+        setError(data.message || "Signup failed");
       }
     } catch (error) {
-      setError("An error occurred. Please try again.")
+      setError("An error occurred. Please try again.");
     }
-  }
+  };
 
   return (
     <PageWrapper>
@@ -162,7 +163,7 @@ const SignupPage = () => {
               required
             />
             <label htmlFor="terms">
-              I accept the <a href="/terms">terms and conditions</a>
+              I accept the <Link to="/terms">terms and conditions</Link>
             </label>
           </CheckboxWrapper>
           {error && <ErrorMessage>{error}</ErrorMessage>}
@@ -170,7 +171,7 @@ const SignupPage = () => {
         </form>
       </FormWrapper>
     </PageWrapper>
-  )
-}
+  );
+};
 
-export default SignupPage
+export default SignupPage;
