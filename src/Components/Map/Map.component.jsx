@@ -37,7 +37,7 @@ const Map = () => {
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: "mapbox://styles/mapbox/streets-v11",
-      center: [90.4125, 23.8103],
+      center: [90.4125, 23.8103], 
       zoom: 12,
     });
 
