@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -16,7 +17,7 @@ const FormWrapper = styled.div`
   backdrop-filter: blur(10px);
   padding: 2rem;
   border-radius: 15px;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  // box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   border: 1px solid rgba(255, 255, 255, 0.18);
   width: 100%;
   max-width: 400px;
@@ -77,11 +78,15 @@ const ErrorMessage = styled.p`
 
 const SignupPage = () => {
   const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,29 +102,41 @@ const SignupPage = () => {
       return;
     }
 
-    try {
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, email, password }),
+    const data = {
+      username,
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      mobile_no: phoneNumber,
+      password,
+      confirm_password: confirmPassword, // Adding confirm_password to the payload
+    };
+
+    console.log(data);
+    fetch("https://parkspotter-backened.onrender.com/customer/customer_register/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then((data) => {
+            throw new Error(data.confirm_password || "An error occurred. Please try again.");
+          });
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        toast.success("Customer account successful.");
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setError(error.message);
       });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
-        console.log("Signup successful", data);
-      } else {
-        setError(data.message || "Signup failed");
-      }
-    } catch (error) {
-      setError("An error occurred. Please try again.");
-    }
   };
 
   return (
@@ -135,10 +152,31 @@ const SignupPage = () => {
             required
           />
           <Input
+            type="text"
+            placeholder="First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+          />
+          <Input
+            type="text"
+            placeholder="Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            required
+          />
+          <Input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <Input
+            type="text"
+            placeholder="Phone Number"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
             required
           />
           <Input
