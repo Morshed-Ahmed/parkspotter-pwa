@@ -84,7 +84,6 @@ const Home = () => {
   }, [location, navigate, dispatch, redirectedFlag])
 
 
-
   return (
     <>
       <Header />
