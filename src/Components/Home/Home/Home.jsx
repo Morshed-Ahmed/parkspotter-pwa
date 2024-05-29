@@ -81,7 +81,9 @@ const Home = () => {
       }
     }
     dispatch(setRedirectedFlag(false))
-  }, [location, navigate])
+  }, [location, navigate, dispatch, redirectedFlag])
+
+
 
   return (
     <>
