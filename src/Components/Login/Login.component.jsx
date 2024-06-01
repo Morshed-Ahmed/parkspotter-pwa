@@ -126,6 +126,8 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
+  console.log(success);
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
 

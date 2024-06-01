@@ -122,6 +122,8 @@ const Home = () => {
   const [points, setPoints] = useState(0)
   const [availableParkingLots, setAvailableParkingLots] = useState(0)
 
+  console.log(bookingCount);
+
   useEffect(() => {
     if (redirectedFlag) {
       const params = new URLSearchParams(location.search)
