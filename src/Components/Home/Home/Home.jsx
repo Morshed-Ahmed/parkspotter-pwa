@@ -17,7 +17,7 @@ import {
   setRedirectedFlag,
 } from "../../../Store/User/userSlice";
 import Slider from "react-slick";
-import FlipCard from "./FlipCard"; // Import the FlipCard component
+import FlipCard from "./FlipCard";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -227,7 +227,7 @@ const Home = () => {
             iconColor="#0984e3"
             infoColor="#0964c3"
             textColor="#202123"
-            navigateTo="/history" // Adjusted path
+            navigateTo="/history" 
             navigate={navigate}
             backText="View invoices"
           />
@@ -266,7 +266,7 @@ const Home = () => {
             iconColor="#e17055"
             infoColor="#c15035"
             textColor="#202123"
-            navigateTo="/map" // Adjusted path
+            navigateTo="/map" 
             navigate={navigate}
             backText="View parking lots"
           />
@@ -279,7 +279,7 @@ const Home = () => {
             iconColor="#fd79a8"
             infoColor="#cd4968"
             textColor="#202123"
-            navigateTo="/terms" // Adjusted path
+            navigateTo="/terms" 
             navigate={navigate}
             backText="View rewards"
           />
