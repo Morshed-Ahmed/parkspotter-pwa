@@ -4,6 +4,7 @@ import styled from "styled-components"
 import toast from "react-hot-toast"
 
 const NavbarContainer = styled.div`
+font-family: 'Roboto', sans-serif;
   display: flex;
   justify-content: space-between;
   align-items: center;

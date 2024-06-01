@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
-import styled from "styled-components";
+import { useEffect, useState } from "react"
+import { NavLink } from "react-router-dom"
+import styled from "styled-components"
 
 const Container = styled.div`
+  font-family: "Roboto", sans-serif;
   max-width: 600px;
   margin: auto;
   padding: 20px;
@@ -17,7 +18,7 @@ const Container = styled.div`
     box-shadow: none;
     padding: 10px;
   }
-`;
+`
 
 const ProfileTitle = styled.h1`
   font-size: 26px;
@@ -29,7 +30,7 @@ const ProfileTitle = styled.h1`
   @media (max-width: 768px) {
     font-size: 22px;
   }
-`;
+`
 
 const CircularImageContainer = styled.div`
   width: 150px;
@@ -43,13 +44,13 @@ const CircularImageContainer = styled.div`
     width: 120px;
     height: 120px;
   }
-`;
+`
 
 const Image = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-`;
+`
 
 const ProfileField = styled.div`
   display: flex;
@@ -57,13 +58,13 @@ const ProfileField = styled.div`
   align-items: flex-start;
   margin-bottom: 15px;
   width: 100%;
-`;
+`
 
 const Label = styled.label`
   font-size: 14px;
   color: #555;
   margin-bottom: 5px;
-`;
+`
 
 const Input = styled.input`
   width: 100%;
@@ -76,7 +77,7 @@ const Input = styled.input`
   &:disabled {
     background-color: #e9ecef;
   }
-`;
+`
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -87,7 +88,7 @@ const ButtonContainer = styled.div`
     flex-direction: column;
     gap: 10px;
   }
-`;
+`
 
 const EditButton = styled.button`
   padding: 10px 20px;
@@ -102,7 +103,7 @@ const EditButton = styled.button`
   &:hover {
     background-color: #1c6ea4;
   }
-`;
+`
 
 const CancelButton = styled.button`
   padding: 10px 20px;
@@ -117,7 +118,7 @@ const CancelButton = styled.button`
   &:hover {
     background-color: #ecf0f1;
   }
-`;
+`
 
 const SaveButton = styled.button`
   padding: 10px 20px;
@@ -137,11 +138,11 @@ const SaveButton = styled.button`
     background-color: #c3e6cb;
     cursor: not-allowed;
   }
-`;
+`
 
 const ProfileFieldContainer = styled.div`
   margin-top: 20px;
-`;
+`
 
 const BackButton = styled(NavLink)`
   display: flex;
@@ -158,10 +159,10 @@ const BackButton = styled(NavLink)`
     width: 20px;
     margin-right: 8px;
   }
-`;
+`
 
 const PersonalInformation = () => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false)
   const [formValues, setFormValues] = useState({
     username: "",
     email: "",
@@ -173,10 +174,10 @@ const PersonalInformation = () => {
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
-  });
+  })
 
-  const user_id = localStorage.getItem("user_id");
-  const token = localStorage.getItem("token");
+  const user_id = localStorage.getItem("user_id")
+  const token = localStorage.getItem("token")
 
   useEffect(() => {
     fetch(`https://parkspotter-backened.onrender.com/customer/customer-list/`, {
@@ -188,7 +189,7 @@ const PersonalInformation = () => {
       .then((data) => {
         const userData = data.find(
           (customer) => customer.customer_id.id === parseInt(user_id)
-        );
+        )
 
         if (userData) {
           setFormValues({
@@ -202,23 +203,23 @@ const PersonalInformation = () => {
             currentPassword: "",
             newPassword: "",
             confirmPassword: "",
-          });
+          })
         }
-      });
-  }, [user_id, token]);
+      })
+  }, [user_id, token])
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
+    const { name, value } = e.target
+    setFormValues({ ...formValues, [name]: value })
+  }
 
   const handleEditClick = () => {
-    setIsEditing(true);
-  };
+    setIsEditing(true)
+  }
 
   const handleCancelClick = () => {
-    setIsEditing(false);
-  };
+    setIsEditing(false)
+  }
 
   const handleSaveClick = () => {
     const updatedProfile = {
@@ -233,26 +234,29 @@ const PersonalInformation = () => {
       mobile_no: formValues.mobile_no,
       vehicle_brand: formValues.vehicle_brand,
       plate_number: formValues.plate_number,
-      joined_date: new Date().toISOString(), 
-    };
+      joined_date: new Date().toISOString(),
+    }
 
-    fetch(`https://parkspotter-backened.onrender.com/customer/customer-list/${user_id}/`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(updatedProfile),
-    })
+    fetch(
+      `https://parkspotter-backened.onrender.com/customer/customer-list/${user_id}/`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updatedProfile),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
-        console.log("Profile updated:", data);
-        setIsEditing(false);
+        console.log("Profile updated:", data)
+        setIsEditing(false)
       })
       .catch((error) => {
-        console.error("Error updating profile:", error);
-      });
-  };
+        console.error("Error updating profile:", error)
+      })
+  }
 
   return (
     <div style={{ padding: "15px" }}>
@@ -390,7 +394,7 @@ const PersonalInformation = () => {
         </ProfileFieldContainer>
       </Container>
     </div>
-  );
-};
+  )
+}
 
-export default PersonalInformation;
+export default PersonalInformation

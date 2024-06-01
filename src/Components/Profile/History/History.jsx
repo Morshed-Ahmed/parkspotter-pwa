@@ -1,18 +1,20 @@
-import React, { useEffect, useState, useCallback } from "react";
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { toast, Toaster } from "react-hot-toast";
-import Header from "../../SharedComponents/Header/Header";
+import React, { useEffect, useState, useCallback } from "react"
+import styled from "styled-components"
+import { useNavigate } from "react-router-dom"
+import { toast, Toaster } from "react-hot-toast"
+import Header from "../../SharedComponents/Header/Header"
 
 const PageWrapper = styled.div`
+  font-family: "Roboto", sans-serif;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #f0f0f0;
-`;
+`
 
 const ContentWrapper = styled.div`
+  font-family: "Roboto", sans-serif;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   padding: 1.5rem;
@@ -26,7 +28,7 @@ const ContentWrapper = styled.div`
   @media (min-width: 768px) {
     padding: 2rem;
   }
-`;
+`
 
 const Title = styled.h1`
   font-size: 1.5rem;
@@ -37,7 +39,7 @@ const Title = styled.h1`
   @media (min-width: 768px) {
     font-size: 2rem;
   }
-`;
+`
 
 const Controls = styled.div`
   display: flex;
@@ -49,7 +51,7 @@ const Controls = styled.div`
     flex-direction: row;
     justify-content: space-between;
   }
-`;
+`
 
 const Button = styled.button`
   padding: 10px 20px;
@@ -66,7 +68,7 @@ const Button = styled.button`
     background-color: #202123;
     color: coral;
   }
-`;
+`
 
 const Input = styled.input`
   padding: 10px;
@@ -80,13 +82,13 @@ const Input = styled.input`
   @media (min-width: 768px) {
     max-width: 300px;
   }
-`;
+`
 
 const TicketList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-`;
+`
 
 const TicketItem = styled.div`
   background-color: rgba(255, 255, 255, 0.1);
@@ -100,13 +102,13 @@ const TicketItem = styled.div`
   &:hover {
     background-color: rgba(255, 255, 255, 0.2);
   }
-`;
+`
 
 const DetailRow = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.5rem;
-`;
+`
 
 const Detail = styled.div`
   flex: 1;
@@ -115,7 +117,7 @@ const Detail = styled.div`
   @media (max-width: 768px) {
     text-align: start;
   }
-`;
+`
 
 const DetailTicketNo = styled.div`
   flex: 1;
@@ -125,17 +127,17 @@ const DetailTicketNo = styled.div`
   @media (max-width: 768px) {
     text-align: right;
   }
-`;
+`
 
 const LabelRight = styled.span`
   font-weight: bold;
   margin-right: 5px;
   margin-left: 5px;
-`;
+`
 
 const LabelLeft = styled(LabelRight)`
   margin-left: 0px;
-`;
+`
 
 const dummyTickets = [
   {
@@ -156,42 +158,48 @@ const dummyTickets = [
     date: "2024-05-27",
     parkOwner: "Mirpur",
   },
-];
+]
 
 const TicketHistory = () => {
-  const [tickets, setTickets] = useState(dummyTickets);
-  const [searchDate, setSearchDate] = useState("");
-  const navigate = useNavigate();
+  const [tickets, setTickets] = useState(dummyTickets)
+  const [searchDate, setSearchDate] = useState("")
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await fetch("https://parkspotter-backened.onrender.com/tickets");
-        const data = await response.json();
-        setTickets(data);
+        const response = await fetch(
+          "https://parkspotter-backened.onrender.com/tickets"
+        )
+        const data = await response.json()
+        setTickets(data)
       } catch (error) {
-        toast.error("Failed to load ticket data. Showing dummy data.");
-        setTickets(dummyTickets); // Fallback to dummy data
+        toast.error("Failed to load ticket data. Showing dummy data.")
+        setTickets(dummyTickets) // Fallback to dummy data
       }
-    };
+    }
 
-    fetchTickets();
-  }, []);
+    fetchTickets()
+  }, [])
 
   const handleSortByNewest = useCallback(() => {
-    const sortedTickets = [...tickets].sort((a, b) => new Date(b.date) - new Date(a.date));
-    setTickets(sortedTickets);
-  }, [tickets]);
+    const sortedTickets = [...tickets].sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    )
+    setTickets(sortedTickets)
+  }, [tickets])
 
   const handleSearch = (event) => {
-    setSearchDate(event.target.value);
-  };
+    setSearchDate(event.target.value)
+  }
 
-  const filteredTickets = tickets.filter((ticket) => ticket.date.includes(searchDate));
+  const filteredTickets = tickets.filter((ticket) =>
+    ticket.date.includes(searchDate)
+  )
 
   const handleTicketClick = (ticketNo) => {
-    navigate(`/ticket/${ticketNo}`);
-  };
+    navigate(`/ticket/${ticketNo}`)
+  }
 
   return (
     <>
@@ -210,10 +218,15 @@ const TicketHistory = () => {
           </Controls>
           <TicketList>
             {filteredTickets.map((ticket) => (
-              <TicketItem key={ticket.ticketNo} onClick={() => handleTicketClick(ticket.ticketNo)}>
+              <TicketItem
+                key={ticket.ticketNo}
+                onClick={() => handleTicketClick(ticket.ticketNo)}
+              >
                 <DetailTicketNo>
                   <LabelLeft>No:</LabelLeft>
-                  <span style={{ color: "coral", fontWeight: "bold" }}>{ticket.ticketNo}</span>
+                  <span style={{ color: "coral", fontWeight: "bold" }}>
+                    {ticket.ticketNo}
+                  </span>
                 </DetailTicketNo>
                 <DetailRow>
                   <Detail>
@@ -238,7 +251,7 @@ const TicketHistory = () => {
         </ContentWrapper>
       </PageWrapper>
     </>
-  );
-};
+  )
+}
 
-export default TicketHistory;
+export default TicketHistory

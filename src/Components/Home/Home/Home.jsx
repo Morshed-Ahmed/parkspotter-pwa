@@ -6,8 +6,8 @@ import {
   FaMapMarkerAlt,
   FaFileInvoice,
   FaUser,
-  FaHistory,
-  FaParking,
+  // FaHistory,
+  // FaParking,
   FaRoad,
   FaStar,
 } from "react-icons/fa"
@@ -28,7 +28,7 @@ const HomePageContainer = styled.div`
   align-items: center;
   padding: 1rem;
   background-color: #f7f9fc;
-  min-height: 100vh;
+  // min-height: 100vh;
 `
 
 // const PageTitle = styled.h1`
@@ -49,6 +49,7 @@ const CardsCarousel = styled(Slider)`
 `
 
 const InfoCard = styled.div`
+  font-family: "Roboto", sans-serif;
   background-color: ${(props) => props.bgColor};
   border-radius: 16px;
   color: white;
@@ -61,6 +62,7 @@ const InfoCard = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 90%;
   max-width: 600px;
+  // border: 2px solid ${(props) => props.borderColor};
 
   @media (min-width: 768px) {
     width: 70%;
@@ -75,14 +77,12 @@ const InfoCardIcon = styled.div`
   font-size: 2rem;
   margin-bottom: 0.5rem;
   text-align: center;
-
 `
 
 const InfoCardBalance = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
   text-align: center;
-
 `
 
 const InfoCardNumber = styled.div`
@@ -97,7 +97,6 @@ const InfoCardHolder = styled.div`
   font-size: 1rem;
   font-style: italic;
   text-align: center;
-
 `
 
 const SectionTitle = styled.h2`
@@ -118,6 +117,11 @@ const MenuGrid = styled.div`
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  & > *:last-child {
+    grid-column: span 2;
+    width: 100%;
+  }
 `
 
 const Home = () => {
@@ -132,7 +136,7 @@ const Home = () => {
   const [paidInvoices, setPaidInvoices] = useState(0)
   const [availableParkingLots, setAvailableParkingLots] = useState(0)
 
-  console.log(paidInvoices, paidUnpaidCount)
+  console.log(paidInvoices, paidUnpaidCount, bookingCount, availableParkingLots)
   useEffect(() => {
     if (redirectedFlag) {
       const params = new URLSearchParams(location.search)
@@ -192,9 +196,8 @@ const Home = () => {
     <>
       <Header />
       <HomePageContainer>
-        {/* <PageTitle>Hello User Name</PageTitle> */}
         <CardsCarousel {...settings}>
-          <InfoCard bgColor="#da1d81">
+          <InfoCard bgColor="#da1d81" borderColor="#fff">
             <InfoCardIcon>
               <FaRoad />
             </InfoCardIcon>
@@ -202,7 +205,7 @@ const Home = () => {
             <InfoCardNumber>49</InfoCardNumber>
             <InfoCardHolder>In June</InfoCardHolder>
           </InfoCard>
-          <InfoCard bgColor="#0984e3">
+          <InfoCard bgColor="#0984e3" borderColor="#fff">
             <InfoCardIcon>
               <FaStar />
             </InfoCardIcon>
@@ -214,57 +217,45 @@ const Home = () => {
         <SectionTitle>Menu</SectionTitle>
         <MenuGrid>
           <FlipCard
-            icon={<FaMapMarkerAlt />}
-            text="Find Parking"
-            info="Available lots"
-            bgColor="#00b894"
-            borderColor="#007854"
-            iconColor="#00b894"
-            infoColor="#009874"
-            textColor="#202123"
-            navigateTo="/map"
-            navigate={navigate}
-            backText="Find parking spots"
-          />
-          <FlipCard
             icon={<FaFileInvoice />}
             text="Invoices"
             info="Paid/Unpaid"
             bgColor="#0984e3"
             borderColor="#0984e3"
-            iconColor="#0984e3"
-            infoColor="#0964c3"
-            textColor="#202123"
+            iconColor="#fff"
+            infoColor="#fff"
+            textColor="#fff"
             navigateTo="/history"
             navigate={navigate}
             backText="View invoices"
           />
+
           <FlipCard
             icon={<FaUser />}
             text="Profile"
             info="View & Edit"
             bgColor="#6c5ce7"
             borderColor="#6c5ce7"
-            iconColor="#6c5ce7"
-            infoColor="#6c5ce7"
-            textColor="#202123"
+            iconColor="#fff"
+            infoColor="#fff"
+            textColor="#fff"
             navigateTo="/profile"
             navigate={navigate}
             backText="View profile"
           />
-
           <FlipCard
-            icon={<FaStar />}
-            text="Rewards"
-            info={`${points} points`}
-            bgColor="#fd79a8"
-            borderColor="#8d4958"
-            iconColor="#fd79a8"
-            infoColor="#cd4968"
-            textColor="#202123"
-            navigateTo="/terms"
+            icon={<FaMapMarkerAlt />}
+            text="Find Parking"
+            info="Available lots"
+            bgColor="#00b894"
+            borderColor="#00b894"
+            iconColor="#fff"
+            infoColor="#fff"
+            textColor="#fff"
+            navigateTo="/map"
             navigate={navigate}
-            backText="View rewards"
+            backText="Find parking spots"
+            isLast={true}
           />
         </MenuGrid>
       </HomePageContainer>
@@ -273,3 +264,4 @@ const Home = () => {
 }
 
 export default Home
+// original
