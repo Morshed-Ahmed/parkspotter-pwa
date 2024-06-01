@@ -105,6 +105,9 @@ const Map = () => {
               parseFloat(item.latitude),
             ],
             availableSpots: item.available_slot,
+            ownerFullName: `${item.park_owner_id.first_name} ${item.park_owner_id.last_name}`,
+            phone: item.mobile_no,
+            image: item.image,
           }));
 
         setLocationData(transformedData);
@@ -191,7 +194,16 @@ const Map = () => {
           >
             <PopupContainer>
               <CloseButton onClick={() => setActiveLocation(null)}>×</CloseButton>
+              {activeLocation.image && (
+                <img
+                  src={activeLocation.image}
+                  alt={activeLocation.name}
+                  style={{ width: "100%", borderRadius: "10px" }}
+                />
+              )}
               <h4>{activeLocation.name}</h4>
+              <p>Owner: {activeLocation.ownerFullName}</p>
+              <p>Phone: {activeLocation.phone}</p>
               <p>{activeLocation.availableSpots} spots available</p>
               <p>
                 Distance:{" "}
@@ -213,4 +225,3 @@ const Map = () => {
 };
 
 export default Map;
-// original

@@ -311,3 +311,4 @@ const LocationDetail = () => {
 }
 
 export default LocationDetail
+// original
