@@ -1,34 +1,47 @@
 import { useEffect, useState } from "react"
 import { NavLink } from "react-router-dom"
-import styled from "styled-components"
+import styled, { keyframes } from "styled-components"
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`
 
 const Container = styled.div`
-  font-family: "Roboto", sans-serif;
+  font-family: "San Francisco", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
   max-width: 600px;
   margin: auto;
   padding: 20px;
-  background-color: #ffffff;
-  border-radius: 12px;
+  background-color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: ${fadeIn} 1s ease-in-out;
 
   @media (max-width: 768px) {
     width: 100%;
     margin: 0;
     border-radius: 0;
     box-shadow: none;
-    padding: 10px;
+    padding: 15px;
   }
 `
 
 const ProfileTitle = styled.h1`
-  font-size: 26px;
+  font-size: 28px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
   color: #333;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 768px) {
-    font-size: 22px;
+    font-size: 24px;
   }
 `
 
@@ -70,12 +83,17 @@ const Input = styled.input`
   width: 100%;
   padding: 10px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  border: ${({ isEditing }) => (isEditing ? "1px solid #ccc" : "none")};
   border-radius: 8px;
-  background-color: #fff;
+  background-color: ${({ isEditing }) => (isEditing ? "#fff" : "#e9ecef")};
+  transition: border-color 0.3s, background-color 0.3s;
 
   &:disabled {
     background-color: #e9ecef;
+  }
+
+  &:focus {
+    border-color: ${({ isEditing }) => (isEditing ? "#007aff" : "none")};
   }
 `
 
@@ -90,54 +108,52 @@ const ButtonContainer = styled.div`
   }
 `
 
-const EditButton = styled.button`
+const Button = styled.button`
   padding: 10px 20px;
   font-size: 16px;
-  color: #fff;
-  background-color: #2980b9;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s;
 
-  &:hover {
-    background-color: #1c6ea4;
-  }
-`
+  ${({ variant }) =>
+    variant === "edit" &&
+    `
+    color: #fff;
+    background-color: #007aff;
 
-const CancelButton = styled.button`
-  padding: 10px 20px;
-  font-size: 16px;
-  color: #2980b9;
-  background-color: #fff;
-  border: 1px solid #2980b9;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    &:hover {
+      background-color: #005bb5;
+    }
+  `}
 
-  &:hover {
-    background-color: #ecf0f1;
-  }
-`
+  ${({ variant }) =>
+    variant === "cancel" &&
+    `
+    color: #007aff;
+    background-color: #fff;
+    border: 1px solid #007aff;
 
-const SaveButton = styled.button`
-  padding: 10px 20px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #27ae60;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    &:hover {
+      background-color: #f1f1f1;
+    }
+  `}
 
-  &:hover {
-    background-color: #219150;
-  }
+  ${({ variant }) =>
+    variant === "save" &&
+    `
+    color: #fff;
+    background-color: #34c759;
 
-  &:disabled {
-    background-color: #c3e6cb;
-    cursor: not-allowed;
-  }
+    &:hover {
+      background-color: #28a745;
+    }
+
+    &:disabled {
+      background-color: #c3e6cb;
+      cursor: not-allowed;
+    }
+  `}
 `
 
 const ProfileFieldContainer = styled.div`
@@ -148,11 +164,11 @@ const BackButton = styled(NavLink)`
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: #2980b9;
+  color: #007aff;
   margin-bottom: 20px;
-
+    
   &:hover {
-    color: #1c6ea4;
+    color: #005bb5;
   }
 
   img {
@@ -261,13 +277,7 @@ const PersonalInformation = () => {
   return (
     <div style={{ padding: "15px" }}>
       <Container>
-        <BackButton to={"/home"}>
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/109/109618.png"
-            alt="Back"
-          />
-          Back
-        </BackButton>
+        <BackButton to={"/home"}>Go Back</BackButton>
         <ProfileTitle>Personal Information</ProfileTitle>
         <CircularImageContainer>
           <Image
@@ -286,6 +296,7 @@ const PersonalInformation = () => {
               value={formValues.username}
               onChange={handleInputChange}
               disabled={!isEditing}
+              isEditing={isEditing}
             />
           </ProfileField>
           <ProfileField>
@@ -296,6 +307,7 @@ const PersonalInformation = () => {
               value={formValues.email}
               onChange={handleInputChange}
               disabled={!isEditing}
+              isEditing={isEditing}
             />
           </ProfileField>
           <ProfileField>
@@ -306,6 +318,7 @@ const PersonalInformation = () => {
               value={formValues.first_name}
               onChange={handleInputChange}
               disabled={!isEditing}
+              isEditing={isEditing}
             />
           </ProfileField>
           <ProfileField>
@@ -316,6 +329,7 @@ const PersonalInformation = () => {
               value={formValues.last_name}
               onChange={handleInputChange}
               disabled={!isEditing}
+              isEditing={isEditing}
             />
           </ProfileField>
           <ProfileField>
@@ -326,6 +340,7 @@ const PersonalInformation = () => {
               value={formValues.mobile_no}
               onChange={handleInputChange}
               disabled={!isEditing}
+              isEditing={isEditing}
             />
           </ProfileField>
           <ProfileField>
@@ -336,6 +351,7 @@ const PersonalInformation = () => {
               value={formValues.vehicle_brand}
               onChange={handleInputChange}
               disabled={!isEditing}
+              isEditing={isEditing}
             />
           </ProfileField>
           <ProfileField>
@@ -346,6 +362,7 @@ const PersonalInformation = () => {
               value={formValues.plate_number}
               onChange={handleInputChange}
               disabled={!isEditing}
+              isEditing={isEditing}
             />
           </ProfileField>
 
@@ -359,6 +376,7 @@ const PersonalInformation = () => {
                   placeholder="Current Password"
                   value={formValues.currentPassword}
                   onChange={handleInputChange}
+                  isEditing={isEditing}
                 />
               </ProfileField>
               <ProfileField>
@@ -368,6 +386,7 @@ const PersonalInformation = () => {
                   placeholder="New Password"
                   value={formValues.newPassword}
                   onChange={handleInputChange}
+                  isEditing={isEditing}
                 />
               </ProfileField>
               <ProfileField>
@@ -377,6 +396,7 @@ const PersonalInformation = () => {
                   placeholder="Retype Password"
                   value={formValues.confirmPassword}
                   onChange={handleInputChange}
+                  isEditing={isEditing}
                 />
               </ProfileField>
             </>
@@ -384,11 +404,21 @@ const PersonalInformation = () => {
           <ButtonContainer>
             {isEditing ? (
               <>
-                <CancelButton onClick={handleCancelClick}>Cancel</CancelButton>
-                <SaveButton onClick={handleSaveClick}>Save Changes</SaveButton>
+                <Button variant="cancel" onClick={handleCancelClick}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="save"
+                  onClick={handleSaveClick}
+                  disabled={!formValues.username || !formValues.email}
+                >
+                  Save Changes
+                </Button>
               </>
             ) : (
-              <EditButton onClick={handleEditClick}>Edit Profile</EditButton>
+              <Button variant="edit" onClick={handleEditClick}>
+                Edit Profile
+              </Button>
             )}
           </ButtonContainer>
         </ProfileFieldContainer>
