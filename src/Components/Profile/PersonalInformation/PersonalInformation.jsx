@@ -3,137 +3,160 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
-  width: 50%;
+  max-width: 600px;
   margin: auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
   @media (max-width: 768px) {
     width: 100%;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 10px;
   }
 `;
 
-export const ProfileTitle = styled.h1`
-  font-size: 20px;
-  font-weight: 600;
+const ProfileTitle = styled.h1`
+  font-size: 26px;
+  font-weight: bold;
   text-align: center;
-  margin: 12px;
+  margin-bottom: 20px;
+  color: #333;
 
   @media (max-width: 768px) {
-    font-size: 15px;
+    font-size: 22px;
   }
 `;
 
-export const CircularImageContainer = styled.div`
-  width: 130px;
-  height: 130px;
+const CircularImageContainer = styled.div`
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
-  margin: auto;
+  margin: 20px auto;
+
   @media (max-width: 768px) {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
   }
 `;
 
-export const Image = styled.img`
+const Image = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
 `;
 
-export const ProfileField = styled.div`
+const ProfileField = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-bottom: 10px;
-  width: 400px;
-  margin: auto;
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
+  margin-bottom: 15px;
+  width: 100%;
 `;
 
-export const Label = styled.label`
+const Label = styled.label`
   font-size: 14px;
-  color: #666;
+  color: #555;
   margin-bottom: 5px;
 `;
 
-export const Input = styled.input`
+const Input = styled.input`
   width: 100%;
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f5f5f5;
+  border-radius: 8px;
+  background-color: #fff;
+
   &:disabled {
     background-color: #e9ecef;
   }
 `;
 
-export const ButtonContainer = styled.div`
+const ButtonContainer = styled.div`
   display: flex;
-  gap: 10px;
+  justify-content: space-around;
   margin-top: 20px;
-`;
 
-export const EditButton = styled.button`
-  padding: 10px 20px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  &:hover {
-    background-color: #0056b3;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px;
   }
 `;
 
-export const CancelButton = styled.button`
+const EditButton = styled.button`
   padding: 10px 20px;
   font-size: 16px;
-  color: #007bff;
+  color: #fff;
+  background-color: #2980b9;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #1c6ea4;
+  }
+`;
+
+const CancelButton = styled.button`
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #2980b9;
   background-color: #fff;
-  border: 1px solid #007bff;
-  border-radius: 5px;
+  border: 1px solid #2980b9;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s;
+
   &:hover {
-    background-color: #e9ecef;
+    background-color: #ecf0f1;
   }
 `;
 
-export const SaveButton = styled.button`
+const SaveButton = styled.button`
   padding: 10px 20px;
   font-size: 16px;
   color: #fff;
-  background-color: #28a745;
+  background-color: #27ae60;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s;
+
   &:hover {
-    background-color: #218838;
+    background-color: #219150;
   }
+
   &:disabled {
     background-color: #c3e6cb;
     cursor: not-allowed;
   }
 `;
 
-export const ProfileFieldContainer = styled.div`
-  margin-top: 12px;
+const ProfileFieldContainer = styled.div`
+  margin-top: 20px;
 `;
-export const BackButton = styled(NavLink)`
-  cursor: pointer;
-  display: inline;
+
+const BackButton = styled(NavLink)`
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #2980b9;
+  margin-bottom: 20px;
+
+  &:hover {
+    color: #1c6ea4;
+  }
 
   img {
     width: 20px;
-  }
-  &:hover img {
-    background: #ddd;
-    color: white;
-    border-radius: 7px;
+    margin-right: 8px;
   }
 `;
 
@@ -239,15 +262,15 @@ const PersonalInformation = () => {
             src="https://cdn-icons-png.flaticon.com/512/109/109618.png"
             alt="Back"
           />
+          Back
         </BackButton>
         <ProfileTitle>Personal Information</ProfileTitle>
-
         <CircularImageContainer>
           <Image
             src={
               "https://img.freepik.com/free-photo/handsome-bearded-guy-posing-against-white-wall_273609-20597.jpg?size=626&ext=jpg&ga=GA1.1.2082370165.1715644800&semt=sph"
             }
-            alt={"Profile image"}
+            alt="Profile"
           />
         </CircularImageContainer>
         <ProfileFieldContainer>
@@ -325,7 +348,7 @@ const PersonalInformation = () => {
           {isEditing && (
             <>
               <ProfileField>
-                <Label>Password</Label>
+                <Label>Current Password</Label>
                 <Input
                   type="password"
                   name="currentPassword"

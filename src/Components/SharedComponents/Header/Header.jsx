@@ -7,19 +7,23 @@ const NavbarContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background-color: #333;
-  color: #fff;
+  padding: 15px 20px;
+  background-color: #ffffff;
+  color: #333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 `
 
 const Logo = styled(Link)`
-  font-size: 18px;
+  font-size: 24px;
   font-weight: bold;
   text-decoration: none;
-  color: #fff;
+  color: #333;
 
   @media (min-width: 600px) {
-    font-size: 20px;
+    font-size: 26px;
   }
 `
 
@@ -30,11 +34,17 @@ const ProfileContainer = styled.div`
 const ProfileButton = styled.button`
   background: none;
   border: none;
-  color: #fff;
+  color: #333;
   font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  width: 40px;
+  height: 40px;
+
+  &:hover {
+    color: #2980b9;
+  }
 
   @media (min-width: 600px) {
     font-size: 18px;
@@ -43,58 +53,80 @@ const ProfileButton = styled.button`
 
 const ProfileDropdown = styled.div`
   position: absolute;
-  top: 100%;
+  top: 120%;
   right: 0;
   background-color: #fff;
   color: #333;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
+  border-radius: 8px;
   overflow: hidden;
   z-index: 1000;
-  width: 150px;
+  width: 180px;
+  animation: fadeIn 0.3s ease-in-out;
 
   @media (min-width: 600px) {
-    width: 200px;
+    width: 220px;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 `
 
 const DropdownItem = styled(NavLink)`
   display: block;
-  padding: 10px;
+  padding: 12px 15px;
   color: #333;
   text-decoration: none;
+  transition: background-color 0.3s ease;
+
   &:hover {
-    background-color: #f1f1f1;
+    background-color: #ecf0f1;
   }
 
   @media (min-width: 600px) {
-    padding: 10px 20px;
+    padding: 12px 20px;
   }
 `
 
 const LogoutItem = styled.div`
   display: block;
-  padding: 10px;
+  padding: 12px 15px;
   color: #333;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+
   &:hover {
-    background-color: #f1f1f1;
+    background-color: #ecf0f1;
   }
 
   @media (min-width: 600px) {
-    padding: 10px 20px;
+    padding: 12px 20px;
   }
 `
 
 const ProfileImage = styled.img`
-  width: 30px;
-  height: 30px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 50%;
   margin-right: 10px;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 
   @media (min-width: 600px) {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
   }
 `
 
@@ -151,8 +183,10 @@ const Header = () => {
       <Logo to={"/home"}>ParkSpotter</Logo>
       <ProfileContainer>
         <ProfileButton id="profile-dropdown" onClick={toggleDropdown}>
-          <ProfileImage src="https://via.placeholder.com/30" alt="Profile" />
-          Profile
+          <ProfileImage
+            src="https://img.freepik.com/free-photo/handsome-bearded-guy-posing-against-white-wall_273609-20597.jpg?size=626&ext=jpg&ga=GA1.1.2082370165.1715644800&semt=sph"
+            alt="Profile"
+          />
         </ProfileButton>
         {isDropdownOpen && (
           <ProfileDropdown>

@@ -25,7 +25,6 @@ const userSlice = createSlice({
 
 export const { setUser, clearUser, setRedirectedFlag } = userSlice.actions
 
-// Selectors
 export const selectUser = (state) => state.user
 export const selectUsername = (state) => state.user.username
 export const selectEmail = (state) => state.user.email

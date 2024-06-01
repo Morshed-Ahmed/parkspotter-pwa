@@ -1,4 +1,3 @@
-// functions/create-stripe-payment-intent.js
 require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 

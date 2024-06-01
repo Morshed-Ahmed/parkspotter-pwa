@@ -1,139 +1,123 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import Header from "../SharedComponents/Header/Header"
+// import logo from '../../Assets/Logo/ParkSpotterLogoBlack.svg'
+import { ParkSpotterLogoBlack } from "../../Assets/Logo/Logo"
 
 const PageWrapper = styled.div`
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 1rem;
+  background-color: #f8f9fa;
+  width: 100%;
 `
 
 const ContentWrapper = styled.div`
   background: white;
-  padding: 1rem;
-  border-radius: 10px;
+  padding: 2rem;
   width: 100%;
-  max-width: 100%;
   color: #333;
   position: relative;
-
-  @media (min-width: 600px) {
-    padding: 2rem;
-    max-width: 800px;
-  }
+  font-family: Arial, sans-serif;
 `
 
 const Title = styled.h1`
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   text-align: center;
   color: #333;
-
-  @media (min-width: 600px) {
-    font-size: 2rem;
-  }
 `
 
 const InvoiceHeader = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 2rem;
+`
 
-  @media (min-width: 600px) {
-    flex-direction: row;
-    justify-content: space-between;
-  }
+const Logo = styled.img`
+  max-width: 50px;
+  height: auto;
+`
+
+const InvoiceInfo = styled.div`
+  text-align: right;
 `
 
 const InvoiceSection = styled.div`
-  margin-bottom: 1rem;
-
-  @media (min-width: 600px) {
-    margin-bottom: 2rem;
-  }
+  margin-bottom: 2rem;
 `
 
 const SectionTitle = styled.h2`
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: bold;
   border-bottom: 2px solid #333;
   padding-bottom: 0.5rem;
-  margin-bottom: 0.5rem;
-
-  @media (min-width: 600px) {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
+  margin-bottom: 1rem;
 `
 
 const DetailRow = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   margin-bottom: 0.5rem;
-
-  @media (min-width: 600px) {
-    flex-direction: row;
-    justify-content: space-between;
-  }
 `
 
 const Detail = styled.div`
+  flex: 1;
   text-align: left;
-  margin-bottom: 0.5rem;
-
-  @media (min-width: 600px) {
-    flex: 1;
-    margin-bottom: 0;
-  }
 `
 
 const Label = styled.span`
   font-weight: bold;
 `
 
-const BackButton = styled.button`
-  padding: 7px 14px;
+const Note = styled.p`
+  font-size: 0.9rem;
+  color: #666;
+  text-align: center;
+  margin-top: 2rem;
+`
+
+const PrintButton = styled.button`
+  padding: 10px 20px;
   border-radius: 5px;
   border: none;
-  background-color: coral;
+  background-color: #007bff;
   color: white;
   font-size: 1rem;
   cursor: pointer;
-  position: absolute;
-  top: -10px;
-  left: -10px;
-  z-index: 99;
-
-  &:hover {
-    background-color: #202123;
-  }
-
-  @media (min-width: 600px) {
-    top: 20px;
-    left: 20px;
-  }
+  display: block;
+  margin: 10px auto 0 auto;
 `
 
 const dummyTicket = {
-  amount: "$20",
-  ticketNo: "123458",
-  date: "2024-05-27",
-  parkOwner: "Mirpur",
-  startTime: "10:00 AM",
-  bookingDate: "2024-05-20",
-  paymentType: "Credit Card",
-  parkOwnerName: "John Doe",
-  timeSlot: "10:00 AM - 12:00 PM",
-  paymentStatus: "Paid",
+  id: 21,
+  employee: null,
+  customer: null,
+  zone: 3,
+  slot: 38,
+  vehicle: {
+    plate_number: "ABC3454",
+    mobile_no: "938434",
+  },
+  ticket_no: "SP-Padma-1021",
+  amount: 0.0,
+  fine: 80,
+  check_in_time: null,
+  check_out_time: null,
+  rate_per_minute: "0.50",
+  booking_time: "2024-05-25T23:38:43.926902+06:00",
+  appoximate_check_out_time: null,
+  total_amount: 80.0,
+  is_paid: false,
 }
 
 const DetailedInvoice = () => {
   const { ticketNo } = useParams()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const [ticket, setTicket] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -183,58 +167,94 @@ const DetailedInvoice = () => {
       <Header />
       <PageWrapper>
         <ContentWrapper>
-          <BackButton onClick={() => navigate(-1)}>Back</BackButton>
-          <Title>Invoice Details</Title>
           <InvoiceHeader>
-            <div>
-              <h2>Invoice</h2>
+            <Logo src={ParkSpotterLogoBlack} alt="Company Logo" />
+            <InvoiceInfo>
               <p>
-                <Label>Invoice Number:</Label> {ticket.ticketNo}
+                <Label>Date:</Label>{" "}
+                {new Date(ticket.booking_time).toLocaleDateString()}
               </p>
               <p>
-                <Label>Date:</Label> {ticket.date}
+                <Label>Invoice No:</Label> {ticket.ticket_no}
               </p>
-            </div>
-            <div>
-              <h2>Park Owner</h2>
-              <p>{ticket.parkOwnerName}</p>
-              <p>{ticket.parkOwner}</p>
-            </div>
+            </InvoiceInfo>
           </InvoiceHeader>
 
           <InvoiceSection>
-            <SectionTitle>Booking Information</SectionTitle>
+            <SectionTitle>Vehicle Information:</SectionTitle>
             <DetailRow>
               <Detail>
-                <Label>Booking Date:</Label> {ticket.bookingDate}
+                <Label>Plate Number:</Label> {ticket.vehicle.plate_number}
               </Detail>
               <Detail>
-                <Label>Time Slot:</Label> {ticket.timeSlot}
-              </Detail>
-            </DetailRow>
-            <DetailRow>
-              <Detail>
-                <Label>Start Time:</Label> {ticket.startTime}
+                <Label>Mobile No:</Label> {ticket.vehicle.mobile_no}
               </Detail>
             </DetailRow>
           </InvoiceSection>
 
           <InvoiceSection>
-            <SectionTitle>Payment Information</SectionTitle>
+            <SectionTitle>Booking Details:</SectionTitle>
             <DetailRow>
               <Detail>
-                <Label>Amount:</Label> {ticket.amount}
+                <Label>Zone:</Label> {ticket.zone}
               </Detail>
               <Detail>
-                <Label>Payment Type:</Label> {ticket.paymentType}
+                <Label>Slot:</Label> {ticket.slot}
               </Detail>
             </DetailRow>
             <DetailRow>
               <Detail>
-                <Label>Payment Status:</Label> {ticket.paymentStatus}
+                <Label>Check-in Time:</Label>{" "}
+                {ticket.check_in_time
+                  ? new Date(ticket.check_in_time).toLocaleString()
+                  : "N/A"}
+              </Detail>
+              <Detail>
+                <Label>Approx. Check-out Time:</Label>{" "}
+                {ticket.appoximate_check_out_time
+                  ? new Date(ticket.appoximate_check_out_time).toLocaleString()
+                  : "N/A"}
+              </Detail>
+            </DetailRow>
+            <DetailRow>
+              <Detail>
+                <Label>Rate per Minute:</Label> {ticket.rate_per_minute}
+              </Detail>
+              <Detail>
+                <Label>Booking Time:</Label>{" "}
+                {new Date(ticket.booking_time).toLocaleString()}
               </Detail>
             </DetailRow>
           </InvoiceSection>
+
+          <InvoiceSection>
+            <SectionTitle>Payment Information:</SectionTitle>
+            <DetailRow>
+              <Detail>
+                <Label>Amount:</Label> ${ticket.amount.toFixed(2)}
+              </Detail>
+              <Detail>
+                <Label>Fine:</Label> ${ticket.fine.toFixed(2)}
+              </Detail>
+            </DetailRow>
+            <DetailRow>
+              <Detail>
+                <Label>Total Amount:</Label> ${ticket.total_amount.toFixed(2)}
+              </Detail>
+              <Detail>
+                <Label>Payment Status:</Label>{" "}
+                {ticket.is_paid ? "Paid" : "Unpaid"}
+              </Detail>
+            </DetailRow>
+          </InvoiceSection>
+
+          <Note>
+            NOTE: This is a computer-generated receipt and does not require a
+            physical signature.
+          </Note>
+          <PrintButton onClick={() => window.print()}>
+            Print & Download
+          </PrintButton>
         </ContentWrapper>
       </PageWrapper>
     </>
