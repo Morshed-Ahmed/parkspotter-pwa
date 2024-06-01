@@ -117,7 +117,7 @@ const dummyTicket = {
 
 const DetailedInvoice = () => {
   const { ticketNo } = useParams()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const [ticket, setTicket] = useState(null)
   const [loading, setLoading] = useState(true)
 

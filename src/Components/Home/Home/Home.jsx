@@ -31,13 +31,13 @@ const HomePageContainer = styled.div`
   min-height: 100vh;
 `;
 
-const PageTitle = styled.h1`
-  font-size: 2rem;
-  margin: 1rem 0;
-  color: #333;
-  font-weight: bold;
-  text-align: center;
-`;
+// const PageTitle = styled.h1`
+//   font-size: 2rem;
+//   margin: 1rem 0;
+//   color: #333;
+//   font-weight: bold;
+//   text-align: center;
+// `;
 
 const CardsCarousel = styled(Slider)`
   width: 100%;
@@ -125,6 +125,8 @@ const Home = () => {
   const [paidInvoices, setPaidInvoices] = useState(0);
   const [availableParkingLots, setAvailableParkingLots] = useState(0);
 
+
+  console.log(paidInvoices, paidUnpaidCount);
   useEffect(() => {
     if (redirectedFlag) {
       const params = new URLSearchParams(location.search);
