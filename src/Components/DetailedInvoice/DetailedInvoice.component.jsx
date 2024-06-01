@@ -6,6 +6,7 @@ import Header from "../SharedComponents/Header/Header"
 import { ParkSpotterLogoBlack } from "../../Assets/Logo/Logo"
 
 const PageWrapper = styled.div`
+  font-family: "Roboto", sans-serif;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -15,6 +16,7 @@ const PageWrapper = styled.div`
 `
 
 const ContentWrapper = styled.div`
+  font-family: "Roboto", sans-serif;
   background: white;
   padding: 2rem;
   width: 100%;
