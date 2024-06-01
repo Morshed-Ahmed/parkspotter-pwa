@@ -32,6 +32,8 @@ const NavbarContainer = styled.div`
 const LogoContainer = styled(Link)`
   display: flex;
   align-items: center;
+  text-decoration: none;
+
 `
 
 const StyledLogo = styled(LogoSvg)`
@@ -46,7 +48,7 @@ const LogoText = styled(Link)`
   font-weight: bold;
   text-decoration: none;
   color: #333;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
   animation: ${fadeIn} 1s ease-in-out;
 
   @media (min-width: 600px) {
@@ -55,8 +57,8 @@ const LogoText = styled(Link)`
 `
 
 const BurgerMenu = styled.div`
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
