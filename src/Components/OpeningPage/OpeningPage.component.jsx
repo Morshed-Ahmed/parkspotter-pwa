@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import logo from "../../Assets/Logo/ParkSpotterLogoWhite.svg";
 
-// Keyframes for animations
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -37,7 +36,6 @@ const glow = keyframes`
   }
 `;
 
-// Styled components
 const PageWrapper = styled.div`
   min-height: 100vh;
   display: flex;
