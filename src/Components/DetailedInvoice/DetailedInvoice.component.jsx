@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import Header from "../SharedComponents/Header/Header"
 // import logo from '../../Assets/Logo/ParkSpotterLogoBlack.svg'
 import { ParkSpotterLogoBlack } from "../../Assets/Logo/Logo"
