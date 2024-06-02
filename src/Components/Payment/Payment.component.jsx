@@ -7,7 +7,7 @@ import { Elements, CardElement, useStripe, useElements } from "@stripe/react-str
 import cashIcon from "../../Assets/PaymentIcons/dollar.png";
 import stripeIcon from "../../Assets/PaymentIcons/stripe.png";
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe("pk_test_51PGS16GjULo50m7Sn5jjIOleHMtD8Wy67YmYYr8VXNItzLZ8JBIGq0C9SxzEAffsS74VLY1QXFnzQrBekhlebRAk00fC9HURwk");
 
 const Container = styled.div`
   padding: 20px;
@@ -96,21 +96,29 @@ const StripePaymentForm = ({ bookingDetails, onPaymentSuccess }) => {
     const cardElement = elements.getElement(CardElement);
 
     try {
+      const { paymentMethod, error } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+        billing_details: {
+          name: 'Customer Name', // Replace with actual customer name
+        },
+      });
+
+      if (error) {
+        console.error("Payment method creation error:", error);
+        return;
+      }
+
       const paymentResponse = await axios.post('/.netlify/functions/create-stripe-payment-intent', {
-        paymentMethodId: cardElement,
-        amount: bookingDetails.amount * 100,
+        paymentMethodId: paymentMethod.id,
+        amount: bookingDetails.price * 100,
         currency: "usd",
       });
 
       const { clientSecret } = paymentResponse.data;
 
       const confirmedPayment = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: cardElement,
-          billing_details: {
-            name: 'Customer Name',
-          },
-        },
+        payment_method: paymentMethod.id,
       });
 
       if (confirmedPayment.error) {
@@ -126,7 +134,7 @@ const StripePaymentForm = ({ bookingDetails, onPaymentSuccess }) => {
   return (
     <form onSubmit={handleSubmit}>
       <CardElement />
-      <PayButton type="submit">Pay ${bookingDetails.amount}</PayButton>
+      <PayButton type="submit">Pay ${bookingDetails.price}</PayButton>
     </form>
   );
 };
@@ -191,7 +199,7 @@ const Payment = () => {
           <StripePaymentForm bookingDetails={bookingDetails} onPaymentSuccess={handleStripePaymentSuccess} />
         </Elements>
       ) : (
-        <PayButton onClick={handlePayment}>Pay ${bookingDetails.amount}</PayButton>
+        <PayButton onClick={handlePayment}>Pay ${bookingDetails.price}</PayButton>
       )}
     </Container>
   );
