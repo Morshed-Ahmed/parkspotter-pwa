@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import styled, { keyframes } from "styled-components";
-import { useParams } from "react-router-dom";
-import Header from "../SharedComponents/Header/Header";
-import { ParkSpotterLogoBlack } from "../../Assets/Logo/Logo";
+import React, { useEffect, useState } from "react"
+import styled, { keyframes } from "styled-components"
+import { useParams } from "react-router-dom"
+import Header from "../SharedComponents/Header/Header"
+import { ParkSpotterLogoBlack } from "../../Assets/Logo/Logo"
 
 const fadeIn = keyframes`
   from {
@@ -11,16 +11,18 @@ const fadeIn = keyframes`
   to {
     opacity: 1;
   }
-`;
+`
 
 const PageWrapper = styled.div`
+  min-height: 100vh;
+
   font-family: "Roboto", sans-serif;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   animation: ${fadeIn} 1.5s ease-in-out;
-`;
+`
 
 const ContentWrapper = styled.div`
   font-family: "Roboto", sans-serif;
@@ -32,7 +34,7 @@ const ContentWrapper = styled.div`
   color: #202123;
   position: relative;
   animation: ${fadeIn} 2s ease-in-out;
-`;
+`
 
 const Title = styled.h1`
   font-size: 2rem;
@@ -41,27 +43,27 @@ const Title = styled.h1`
   text-align: center;
   color: #ffffff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-`;
+`
 
 const InvoiceHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 2rem;
-`;
+`
 
 const Logo = styled.img`
   max-width: 50px;
   height: auto;
-`;
+`
 
 const InvoiceInfo = styled.div`
   text-align: right;
-`;
+`
 
 const InvoiceSection = styled.div`
   margin-bottom: 2rem;
-`;
+`
 
 const SectionTitle = styled.h2`
   font-size: 1.2rem;
@@ -69,30 +71,30 @@ const SectionTitle = styled.h2`
   border-bottom: 2px solid #ffffff;
   padding-bottom: 0.5rem;
   margin-bottom: 1rem;
-`;
+`
 
 const DetailRow = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 15px;
   margin-bottom: 0.5rem;
-`;
+`
 
 const Detail = styled.div`
   flex: 1;
   text-align: left;
-`;
+`
 
 const Label = styled.span`
   font-weight: bold;
-`;
+`
 
 const Note = styled.p`
   font-size: 0.9rem;
   color: #cccccc;
   text-align: center;
   margin-top: 2rem;
-`;
+`
 
 const PrintButton = styled.button`
   padding: 10px 20px;
@@ -114,31 +116,33 @@ const PrintButton = styled.button`
     background-color: #007366;
     transform: scale(0.98);
   }
-`;
+`
 
 const DetailedInvoice = () => {
-  const { ticketNo } = useParams();
-  const [ticket, setTicket] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { ticketNo } = useParams()
+  const [ticket, setTicket] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchTicket = async () => {
       try {
-        const response = await fetch(`https://parkspotter-backened.onrender.com/accounts/bookings/${ticketNo}`);
+        const response = await fetch(
+          `https://parkspotter-backened.onrender.com/accounts/bookings/${ticketNo}`
+        )
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Network response was not ok")
         }
-        const data = await response.json();
-        setTicket(data);
+        const data = await response.json()
+        setTicket(data)
       } catch (error) {
-        console.error("Failed to fetch ticket:", error);
+        console.error("Failed to fetch ticket:", error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchTicket();
-  }, [ticketNo]);
+    fetchTicket()
+  }, [ticketNo])
 
   if (loading) {
     return (
@@ -150,7 +154,7 @@ const DetailedInvoice = () => {
           </ContentWrapper>
         </PageWrapper>
       </>
-    );
+    )
   }
 
   if (!ticket) {
@@ -163,7 +167,7 @@ const DetailedInvoice = () => {
           </ContentWrapper>
         </PageWrapper>
       </>
-    );
+    )
   }
 
   return (
@@ -262,7 +266,7 @@ const DetailedInvoice = () => {
         </ContentWrapper>
       </PageWrapper>
     </>
-  );
-};
+  )
+}
 
-export default DetailedInvoice;
+export default DetailedInvoice
