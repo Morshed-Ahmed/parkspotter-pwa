@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import styled from "styled-components"
-import carIcon from "../../Assets/CarIcon/caricon.png"
-import Header from "../SharedComponents/Header/Header"
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import carIcon from "../../Assets/CarIcon/caricon.png";
+import Header from "../SharedComponents/Header/Header";
 
 const Container = styled.div`
-  // padding: 20px;
   background-color: #fff;
   height: 100dvh;
   @media (max-width: 768px) {
     padding: 0px;
   }
-`
+`;
 
 const Title = styled.h1`
   text-align: center;
@@ -20,14 +19,13 @@ const Title = styled.h1`
   color: #202123;
   margin-top: 30px;
   text-decoration: underline;
-`
+`;
 
 const Filters = styled.div`
   display: flex;
   justify-content: center;
   background-color: #202123;
   padding: 25px 25px;
-  // border-radius: 5px;
   gap: 10px;
   margin-bottom: 20px;
   flex-wrap: wrap;
@@ -36,7 +34,7 @@ const Filters = styled.div`
     justify-content: space-evenly;
     border-radius: 0px;
   }
-`
+`;
 
 const Filter = styled.select`
   padding: 9px 10px;
@@ -45,29 +43,21 @@ const Filter = styled.select`
   background-color: #fff;
   color: #202123;
   font-size: 0.8rem;
-`
+`;
 
 const ParkingLotContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-`
+`;
 
 const ZoneContainer = styled.div`
-  // border: 2px solid #222;
   margin-top: 30px;
   position: relative;
   border-left: 0;
   border-right: 0;
   margin-bottom: 20px;
-  // background-color: #202123;
-  // &:first-of-type {
-  //   border-top: 2px dashed #222;
-  // }
-  // &:last-of-type {
-  //   border-bottom: 2px solid #222;
-  // }
-`
+`;
 
 const ZoneTitle = styled.h2`
   position: absolute;
@@ -79,7 +69,7 @@ const ZoneTitle = styled.h2`
   padding: 8px 18px;
   font-size: 0.8rem;
   border-radius: 25px;
-`
+`;
 
 const SlotRow = styled.div`
   display: flex;
@@ -87,7 +77,7 @@ const SlotRow = styled.div`
   gap: 25px;
   flex-wrap: wrap;
   margin: 10px 0;
-`
+`;
 
 const Slot = styled.div`
   width: 200px;
@@ -102,7 +92,6 @@ const Slot = styled.div`
   border-radius: 10px;
   cursor: pointer;
   color: #202123;
-  // box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
   &:hover {
     background-color: ${(props) => (props.booked ? "#ddd" : "#ccffcc")};
   }
@@ -112,20 +101,19 @@ const Slot = styled.div`
     height: 130px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
   }
-`
+`;
 
 const CarIcon = styled.img`
   width: 95%;
   height: 60%;
   margin-top: 30px;
-`
+`;
 
 const SlotText = styled.div`
   position: absolute;
   top: 10px;
   right: 12px;
   box-sizing: content-box;
-
   background-color: ${(props) => (props.booked ? "#202123" : "#fff")};
   border: 2px solid ${(props) => (props.booked ? "#666" : "rgb(0,0,255,0.7)")};
   border-radius: 35px;
@@ -140,7 +128,7 @@ const SlotText = styled.div`
     top: 10px;
     right: 8px;
   }
-`
+`;
 
 const SlotNumber = styled(SlotText)`
   top: 6%;
@@ -153,7 +141,7 @@ const SlotNumber = styled(SlotText)`
   @media (max-width: 768px) {
     padding: 18px 10px;
   }
-`
+`;
 
 const SlotNumberCircle = styled.div`
   border: 1px solid #202123;
@@ -162,91 +150,85 @@ const SlotNumberCircle = styled.div`
   border-radius: 56px;
   position: absolute;
   top: 40%;
-`
+`;
 
 const LocationDetail = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const [parkingSlots, setParkingSlots] = useState([])
-  const [zone, setZone] = useState(null)
-  const [zoneFilter, setZoneFilter] = useState("all")
-  const [availabilityFilter, setAvailabilityFilter] = useState("all")
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [zones, setZones] = useState([]);
+  const [parkingSlots, setParkingSlots] = useState([]);
+  const [zoneFilter, setZoneFilter] = useState("all");
+  const [availabilityFilter, setAvailabilityFilter] = useState("all");
 
   useEffect(() => {
-    const fetchZone = async () => {
+    const fetchZones = async () => {
       try {
+        const token = localStorage.getItem("token");
         const response = await fetch(
-          `https://parkspotter-backened.onrender.com/accounts/zone/`
-        )
-        const data = await response.json()
-        const zoneInfo = data.find((zone) => zone.park_owner === parseInt(id))
-        setZone(zoneInfo ? zoneInfo.id : null)
+          `https://parkspotter-backened.onrender.com/accounts/zone/?park_owner=${id}`,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
+        const data = await response.json();
+        setZones(data);
       } catch (error) {
-        console.error("Error fetching zone:", error)
+        console.error("Error fetching zones:", error);
       }
-    }
+    };
 
     if (id) {
-      fetchZone()
+      fetchZones();
     }
-  }, [id])
+  }, [id]);
 
   useEffect(() => {
     const fetchParkingSlots = async () => {
-      if (!zone) return
+      if (zones.length === 0) return;
 
       try {
+        const token = localStorage.getItem("token");
         const response = await fetch(
-          `https://parkspotter-backened.onrender.com/accounts/slot/`
-        )
-        const data = await response.json()
+          `https://parkspotter-backened.onrender.com/accounts/slot/`,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
+        const data = await response.json();
 
         const transformedData = data.map((slot) => ({
           slotNumber: slot.slot_number,
           zone: slot.zone,
           booked: !slot.available,
-        }))
+        }));
 
-        setParkingSlots(transformedData.filter((slot) => slot.zone === zone))
+        setParkingSlots(transformedData.filter((slot) =>
+          zones.map((zone) => zone.id).includes(slot.zone)
+        ));
       } catch (error) {
-        console.error("Error fetching parking slots:", error)
-        const dummyData = [
-          {
-            slotNumber: 1,
-            zone: "A",
-            booked: true,
-            userEmail: "user1@example.com",
-          },
-          { slotNumber: 2, zone: "A", booked: false },
-          { slotNumber: 3, zone: "B", booked: false },
-          {
-            slotNumber: 4,
-            zone: "B",
-            booked: true,
-            userEmail: "user2@example.com",
-          },
-        ]
-        setParkingSlots(dummyData.filter((slot) => slot.zone === zone))
+        console.error("Error fetching parking slots:", error);
       }
-    }
+    };
 
-    fetchParkingSlots()
-  }, [zone])
+    fetchParkingSlots();
+  }, [zones]);
 
   const handleSlotClick = (slot) => {
     if (!slot.booked) {
-      navigate(`/slot/${slot.slotNumber}`, { state: { ...slot } })
+      navigate(`/slot/${slot.slotNumber}`, { state: { ...slot } });
     }
-  }
+  };
 
   const filteredSlots = parkingSlots.filter((slot) => {
-    if (zoneFilter !== "all" && slot.zone !== zoneFilter) return false
-    if (availabilityFilter === "available" && slot.booked) return false
-    if (availabilityFilter === "unavailable" && !slot.booked) return false
-    return true
-  })
-
-  const zones = Array.from(new Set(parkingSlots.map((slot) => slot.zone)))
+    if (zoneFilter !== "all" && slot.zone !== parseInt(zoneFilter)) return false;
+    if (availabilityFilter === "available" && slot.booked) return false;
+    if (availabilityFilter === "unavailable" && !slot.booked) return false;
+    return true;
+  });
 
   return (
     <>
@@ -259,8 +241,8 @@ const LocationDetail = () => {
           >
             <option value="all">All Zones</option>
             {zones.map((zone) => (
-              <option key={zone} value={zone}>
-                Zone {zone}
+              <option key={zone.id} value={zone.id}>
+                {zone.name}
               </option>
             ))}
           </Filter>
@@ -277,11 +259,11 @@ const LocationDetail = () => {
 
         <ParkingLotContainer>
           {zones.map((zone) => (
-            <ZoneContainer key={zone}>
-              <ZoneTitle>Zone {zone}</ZoneTitle>
+            <ZoneContainer key={zone.id}>
+              <ZoneTitle>{zone.name}</ZoneTitle>
               <SlotRow>
                 {filteredSlots
-                  .filter((slot) => slot.zone === zone)
+                  .filter((slot) => slot.zone === zone.id)
                   .map((slot) => (
                     <Slot
                       key={slot.slotNumber}
@@ -292,7 +274,6 @@ const LocationDetail = () => {
                         <CarIcon src={carIcon} alt="Car Icon" />
                       ) : (
                         <SlotNumberCircle>
-                          {" "}
                           <SlotNumber>Slot&nbsp;{slot.slotNumber}</SlotNumber>
                         </SlotNumberCircle>
                       )}
@@ -307,8 +288,8 @@ const LocationDetail = () => {
         </ParkingLotContainer>
       </Container>
     </>
-  )
-}
+  );
+};
 
-export default LocationDetail
+export default LocationDetail;
 // original
