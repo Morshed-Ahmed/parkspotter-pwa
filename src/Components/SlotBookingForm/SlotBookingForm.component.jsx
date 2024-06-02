@@ -169,7 +169,7 @@ const SlotBookingForm = () => {
     if (checkInTime && approxCheckOutTime) {
       const checkIn = dayjs(checkInTime);
       const checkOut = dayjs(approxCheckOutTime);
-      const duration = checkOut.diff(checkIn, 'minute');
+      const duration = checkOut.diff(checkIn, 'minute') * 0.5;
       setPrice(duration);
     }
   }, [checkInTime, approxCheckOutTime]);
