@@ -1,35 +1,39 @@
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import React, { useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import styled from "styled-components"
 // import axios from "axios";
 // import { loadStripe } from "@stripe/stripe-js";
 // import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import cashIcon from "../../Assets/PaymentIcons/dollar.png";
+import cashIcon from "../../Assets/PaymentIcons/dollar.png"
 // import stripeIcon from "../../Assets/PaymentIcons/stripe.png";
 
 // const stripePromise = loadStripe("pk_test_51PGS16GjULo50m7Sn5jjIOleHMtD8Wy67YmYYr8VXNItzLZ8JBIGq0C9SxzEAffsS74VLY1QXFnzQrBekhlebRAk00fC9HURwk");
 
 const Container = styled.div`
+  min-height: 100vh;
   padding: 20px;
   max-width: 400px;
   margin: 0 auto;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-`;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
 
 const Title = styled.h1`
   text-align: center;
   margin-bottom: 20px;
   font-size: 1.8em;
   color: #333;
-`;
+`
 
 const PaymentOptions = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
-`;
+`
 
 const Option = styled.div`
   display: flex;
@@ -43,27 +47,27 @@ const Option = styled.div`
   &:hover {
     border-color: #007bff;
   }
-`;
+`
 
 const OptionIcon = styled.img`
   width: 40px;
   height: 40px;
   margin-right: 10px;
-`;
+`
 
 const OptionDetails = styled.div`
   flex-grow: 1;
-`;
+`
 
 const OptionTitle = styled.div`
   font-size: 1.2rem;
   color: #333;
-`;
+`
 
 const OptionSubtitle = styled.div`
   font-size: 0.9rem;
   color: #777;
-`;
+`
 
 const PayButton = styled.button`
   width: 100%;
@@ -80,7 +84,7 @@ const PayButton = styled.button`
   &:hover {
     background-color: #0056b3;
   }
-`;
+`
 
 // const StripePaymentForm = ({ bookingDetails, onPaymentSuccess }) => {
 //   const stripe = useStripe();
@@ -140,30 +144,30 @@ const PayButton = styled.button`
 // };
 
 const Payment = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [selectedOption, setSelectedOption] = useState("cash");
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [selectedOption, setSelectedOption] = useState("cash")
   // const [showStripeForm, setShowStripeForm] = useState(false);
 
-  const { bookingDetails } = location.state || {};
+  const { bookingDetails } = location.state || {}
 
   if (!bookingDetails) {
-    return <div>Error: No booking details provided.</div>;
+    return <div>Error: No booking details provided.</div>
   }
 
   const handlePayment = () => {
     // if (selectedOption === "stripe") {
     //   setShowStripeForm(true);
     // } else {
-      const ticket = {
-        ...bookingDetails,
-        paymentMethod: selectedOption,
-        paymentTime: "Due",
-      };
-      console.log("Booking Ticket:", ticket);
-      navigate("/history", { state: { ticket } });
+    const ticket = {
+      ...bookingDetails,
+      paymentMethod: selectedOption,
+      paymentTime: "Due",
+    }
+    console.log("Booking Ticket:", ticket)
+    navigate("/history", { state: { ticket } })
     // }
-  };
+  }
 
   // const handleStripePaymentSuccess = () => {
   //   const ticket = {
@@ -177,9 +181,12 @@ const Payment = () => {
 
   return (
     <Container>
-      <Title>Payment Type</Title>
       <PaymentOptions>
-        <Option selected={selectedOption === "cash"} onClick={() => setSelectedOption("cash")}>
+      <Title>Payment Type</Title>
+        <Option
+          selected={selectedOption === "cash"}
+          onClick={() => setSelectedOption("cash")}
+        >
           <OptionIcon src={cashIcon} alt="Cash Icon" />
           <OptionDetails>
             <OptionTitle>Cash</OptionTitle>
@@ -199,10 +206,10 @@ const Payment = () => {
           <StripePaymentForm bookingDetails={bookingDetails} onPaymentSuccess={handleStripePaymentSuccess} />
         </Elements>
       ) : ( */}
-        <PayButton onClick={handlePayment}>Pay ${bookingDetails.price}</PayButton>
+      <PayButton onClick={handlePayment}>Pay {bookingDetails.price}&nbsp;৳</PayButton>
       {/* )} */}
     </Container>
-  );
-};
+  )
+}
 
-export default Payment;
+export default Payment
