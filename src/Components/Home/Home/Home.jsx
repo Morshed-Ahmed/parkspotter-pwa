@@ -1,30 +1,21 @@
-import React, { useEffect, useState } from "react"
-import { useNavigate, useLocation } from "react-router-dom"
-import styled from "styled-components"
-import Header from "../../SharedComponents/Header/Header"
-import {
-  FaMapMarkerAlt,
-  FaFileInvoice,
-  FaUser,
-  FaRoad,
-  FaStar,
-} from "react-icons/fa"
-import { useDispatch, useSelector } from "react-redux"
-import {
-  selectRedirectedFlag,
-  setRedirectedFlag,
-} from "../../../Store/User/userSlice"
-import Slider from "react-slick"
-import FlipCard from "./FlipCard"
-import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import styled from "styled-components";
+import Header from "../../SharedComponents/Header/Header";
+import { FaMapMarkerAlt, FaFileInvoice, FaUser, FaRoad, FaStar } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { selectRedirectedFlag, setRedirectedFlag } from "../../../Store/User/userSlice";
+import Slider from "react-slick";
+import FlipCard from "./FlipCard";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const HomePageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 1rem;
-`
+`;
 
 const CardsCarousel = styled(Slider)`
   width: 100%;
@@ -33,7 +24,7 @@ const CardsCarousel = styled(Slider)`
     justify-content: center;
     align-items: center;
   }
-`
+`;
 
 const InfoCard = styled.div`
   font-family: "Roboto", sans-serif;
@@ -57,33 +48,33 @@ const InfoCard = styled.div`
   @media (min-width: 1024px) {
     width: 60%;
   }
-`
+`;
 
 const InfoCardIcon = styled.div`
   font-size: 2rem;
   margin-bottom: 0.5rem;
   text-align: center;
-`
+`;
 
 const InfoCardBalance = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
   text-align: center;
-`
+`;
 
 const InfoCardNumber = styled.div`
   margin-top: 1rem;
   font-size: 2rem;
   font-weight: bold;
   text-align: center;
-`
+`;
 
 const InfoCardHolder = styled.div`
   margin-top: 0.5rem;
   font-size: 1rem;
   font-style: italic;
   text-align: center;
-`
+`;
 
 const SectionTitle = styled.h2`
   font-size: 1.5rem;
@@ -92,7 +83,7 @@ const SectionTitle = styled.h2`
   font-weight: bold;
   text-align: left;
   width: 100%;
-`
+`;
 
 const MenuGrid = styled.div`
   display: grid;
@@ -108,41 +99,41 @@ const MenuGrid = styled.div`
     grid-column: span 2;
     width: 100%;
   }
-`
+`;
 
 const Home = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const dispatch = useDispatch()
-  const redirectedFlag = useSelector(selectRedirectedFlag)
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const redirectedFlag = useSelector(selectRedirectedFlag);
 
-  const [bookingCount, setBookingCount] = useState(0)
-  const [paidUnpaidCount, setPaidUnpaidCount] = useState({ paid: 0, unpaid: 0 })
-  const [points, setPoints] = useState(0)
-  const [availableParkingLots, setAvailableParkingLots] = useState(0)
+  const [bookingCount, setBookingCount] = useState(0);
+  const [paidUnpaidCount, setPaidUnpaidCount] = useState({ paid: 0, unpaid: 0 });
+  const [points, setPoints] = useState(0);
+  const [availableParkingLots, setAvailableParkingLots] = useState(0);
 
   console.log(bookingCount);
 
   useEffect(() => {
     if (redirectedFlag) {
-      const params = new URLSearchParams(location.search)
-      const token = params.get("token")
-      const user_id = params.get("user_id")
-      const role = params.get("role")
+      const params = new URLSearchParams(location.search);
+      const token = params.get("token");
+      const user_id = params.get("user_id");
+      const role = params.get("role");
 
       if (token && user_id && role) {
-        localStorage.setItem("token", token)
-        localStorage.setItem("user_id", user_id)
-        localStorage.setItem("role", role)
+        localStorage.setItem("token", token);
+        localStorage.setItem("user_id", user_id);
+        localStorage.setItem("role", role);
       } else {
-        navigate("/login")
+        navigate("/login");
       }
     }
-    dispatch(setRedirectedFlag(false))
-  }, [location, navigate, dispatch, redirectedFlag])
+    dispatch(setRedirectedFlag(false));
+  }, [location, navigate, dispatch, redirectedFlag]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
     if (token) {
       fetch(
         "https://parkspotter-backened.onrender.com/customer/customer_dashboard/",
@@ -156,30 +147,51 @@ const Home = () => {
         .then((data) => {
           const paidBookingsCount = data.bookings.filter(
             (booking) => booking.is_paid
-          ).length
+          ).length;
           const unpaidBookingsCount = data.bookings.filter(
             (booking) => !booking.is_paid
-          ).length
+          ).length;
 
-          setBookingCount(data.bookings.length)
+          setBookingCount(data.bookings.length);
           setPaidUnpaidCount({
             paid: paidBookingsCount,
             unpaid: unpaidBookingsCount,
-          })
-          setPoints(data.customer.points)
-          setAvailableParkingLots(7)
+          });
+          setPoints(data.customer.points);
         })
         .catch((error) => {
-          console.error("Error fetching customer dashboard data:", error)
-          setBookingCount(5)
-          setPaidUnpaidCount({ paid: 3, unpaid: 1 })
-          setPoints(120)
-          setAvailableParkingLots(7)
+          console.error("Error fetching customer dashboard data:", error);
+          setBookingCount(5);
+          setPaidUnpaidCount({ paid: 3, unpaid: 1 });
+          setPoints(120);
+        });
+
+      fetch(
+        "https://parkspotter-backened.onrender.com/accounts/parkowner-list/",
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          const availableLotsCount = data.filter(
+            (owner) =>
+              owner.available_slot > 0 &&
+              owner.latitude &&
+              owner.longitude
+          ).length;
+          setAvailableParkingLots(availableLotsCount);
         })
+        .catch((error) => {
+          console.error("Error fetching park owner data:", error);
+          setAvailableParkingLots(0);
+        });
     } else {
-      navigate("/login")
+      navigate("/login");
     }
-  }, [navigate])
+  }, [navigate]);
 
   const settings = {
     dots: true,
@@ -187,7 +199,7 @@ const Home = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-  }
+  };
 
   return (
     <>
@@ -242,7 +254,7 @@ const Home = () => {
           <FlipCard
             icon={<FaMapMarkerAlt />}
             text="Find Parking"
-            info={`Available lots: ${availableParkingLots}`}
+            info={`Parkinglots Available right now: ${availableParkingLots}`}
             bgColor="#00b894"
             borderColor="#00b894"
             iconColor="#fff"
@@ -256,7 +268,7 @@ const Home = () => {
         </MenuGrid>
       </HomePageContainer>
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

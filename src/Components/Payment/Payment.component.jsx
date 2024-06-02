@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import axios from "axios";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+// import axios from "axios";
+// import { loadStripe } from "@stripe/stripe-js";
+// import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import cashIcon from "../../Assets/PaymentIcons/dollar.png";
-import stripeIcon from "../../Assets/PaymentIcons/stripe.png";
+// import stripeIcon from "../../Assets/PaymentIcons/stripe.png";
 
-const stripePromise = loadStripe("pk_test_51PGS16GjULo50m7Sn5jjIOleHMtD8Wy67YmYYr8VXNItzLZ8JBIGq0C9SxzEAffsS74VLY1QXFnzQrBekhlebRAk00fC9HURwk");
+// const stripePromise = loadStripe("pk_test_51PGS16GjULo50m7Sn5jjIOleHMtD8Wy67YmYYr8VXNItzLZ8JBIGq0C9SxzEAffsS74VLY1QXFnzQrBekhlebRAk00fC9HURwk");
 
 const Container = styled.div`
   padding: 20px;
@@ -82,68 +82,68 @@ const PayButton = styled.button`
   }
 `;
 
-const StripePaymentForm = ({ bookingDetails, onPaymentSuccess }) => {
-  const stripe = useStripe();
-  const elements = useElements();
+// const StripePaymentForm = ({ bookingDetails, onPaymentSuccess }) => {
+//   const stripe = useStripe();
+//   const elements = useElements();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+//   const handleSubmit = async (event) => {
+//     event.preventDefault();
 
-    if (!stripe || !elements) {
-      return;
-    }
+//     if (!stripe || !elements) {
+//       return;
+//     }
 
-    const cardElement = elements.getElement(CardElement);
+//     const cardElement = elements.getElement(CardElement);
 
-    try {
-      const { paymentMethod, error } = await stripe.createPaymentMethod({
-        type: 'card',
-        card: cardElement,
-        billing_details: {
-          name: 'Customer Name', // Replace with actual customer name
-        },
-      });
+//     try {
+//       const { paymentMethod, error } = await stripe.createPaymentMethod({
+//         type: 'card',
+//         card: cardElement,
+//         billing_details: {
+//           name: 'Customer Name', // Replace with actual customer name
+//         },
+//       });
 
-      if (error) {
-        console.error("Payment method creation error:", error);
-        return;
-      }
+//       if (error) {
+//         console.error("Payment method creation error:", error);
+//         return;
+//       }
 
-      const paymentResponse = await axios.post('/.netlify/functions/create-stripe-payment-intent', {
-        paymentMethodId: paymentMethod.id,
-        amount: bookingDetails.price * 100,
-        currency: "usd",
-      });
+//       const paymentResponse = await axios.post('/.netlify/functions/create-stripe-payment-intent', {
+//         paymentMethodId: paymentMethod.id,
+//         amount: bookingDetails.price * 100,
+//         currency: "usd",
+//       });
 
-      const { clientSecret } = paymentResponse.data;
+//       const { clientSecret } = paymentResponse.data;
 
-      const confirmedPayment = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: paymentMethod.id,
-      });
+//       const confirmedPayment = await stripe.confirmCardPayment(clientSecret, {
+//         payment_method: paymentMethod.id,
+//       });
 
-      if (confirmedPayment.error) {
-        console.error("Payment confirmation error:", confirmedPayment.error);
-      } else if (confirmedPayment.paymentIntent.status === "succeeded") {
-        onPaymentSuccess("Stripe");
-      }
-    } catch (error) {
-      console.error("Payment failed:", error);
-    }
-  };
+//       if (confirmedPayment.error) {
+//         console.error("Payment confirmation error:", confirmedPayment.error);
+//       } else if (confirmedPayment.paymentIntent.status === "succeeded") {
+//         onPaymentSuccess("Stripe");
+//       }
+//     } catch (error) {
+//       console.error("Payment failed:", error);
+//     }
+//   };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <CardElement />
-      <PayButton type="submit">Pay ${bookingDetails.price}</PayButton>
-    </form>
-  );
-};
+//   return (
+//     <form onSubmit={handleSubmit}>
+//       <CardElement />
+//       <PayButton type="submit">Pay ${bookingDetails.price}</PayButton>
+//     </form>
+//   );
+// };
 
 const Payment = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState("cash");
-  const [showStripeForm, setShowStripeForm] = useState(false);
+  // const [showStripeForm, setShowStripeForm] = useState(false);
 
   const { bookingDetails } = location.state || {};
 
@@ -152,32 +152,32 @@ const Payment = () => {
   }
 
   const handlePayment = () => {
-    if (selectedOption === "stripe") {
-      setShowStripeForm(true);
-    } else {
+    // if (selectedOption === "stripe") {
+    //   setShowStripeForm(true);
+    // } else {
       const ticket = {
         ...bookingDetails,
         paymentMethod: selectedOption,
         paymentTime: "Due",
       };
       console.log("Booking Ticket:", ticket);
-      navigate("/ticket", { state: { ticket } });
-    }
+      navigate("/history", { state: { ticket } });
+    // }
   };
 
-  const handleStripePaymentSuccess = () => {
-    const ticket = {
-      ...bookingDetails,
-      paymentMethod: "Stripe",
-      paymentTime: "Paid",
-    };
-    console.log("Booking Ticket:", ticket);
-    navigate("/ticket", { state: { ticket } });
-  };
+  // const handleStripePaymentSuccess = () => {
+  //   const ticket = {
+  //     ...bookingDetails,
+  //     paymentMethod: "Stripe",
+  //     paymentTime: "Paid",
+  //   };
+  //   console.log("Booking Ticket:", ticket);
+  //   navigate("/ticket", { state: { ticket } });
+  // };
 
   return (
     <Container>
-      <Title>Choose Payment</Title>
+      <Title>Payment Type</Title>
       <PaymentOptions>
         <Option selected={selectedOption === "cash"} onClick={() => setSelectedOption("cash")}>
           <OptionIcon src={cashIcon} alt="Cash Icon" />
@@ -186,21 +186,21 @@ const Payment = () => {
             <OptionSubtitle>on checkout</OptionSubtitle>
           </OptionDetails>
         </Option>
-        <Option selected={selectedOption === "stripe"} onClick={() => setSelectedOption("stripe")}>
+        {/* <Option selected={selectedOption === "stripe"} onClick={() => setSelectedOption("stripe")}>
           <OptionIcon src={stripeIcon} alt="Stripe Icon" />
           <OptionDetails>
             <OptionTitle>Stripe</OptionTitle>
             <OptionSubtitle>Connect your Stripe account</OptionSubtitle>
           </OptionDetails>
-        </Option>
+        </Option> */}
       </PaymentOptions>
-      {showStripeForm && selectedOption === "stripe" ? (
+      {/* {showStripeForm && selectedOption === "stripe" ? (
         <Elements stripe={stripePromise}>
           <StripePaymentForm bookingDetails={bookingDetails} onPaymentSuccess={handleStripePaymentSuccess} />
         </Elements>
-      ) : (
+      ) : ( */}
         <PayButton onClick={handlePayment}>Pay ${bookingDetails.price}</PayButton>
-      )}
+      {/* )} */}
     </Container>
   );
 };
