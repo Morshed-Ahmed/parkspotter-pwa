@@ -14,6 +14,8 @@ const fadeIn = keyframes`
 `
 
 const Container = styled.div`
+  min-height: 100vh;
+
   font-family: "San Francisco", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, "Helvetica Neue", Arial, sans-serif;
   max-width: 600px;
@@ -166,7 +168,7 @@ const BackButton = styled(NavLink)`
   text-decoration: none;
   color: #007aff;
   margin-bottom: 20px;
-    
+
   &:hover {
     color: #005bb5;
   }
