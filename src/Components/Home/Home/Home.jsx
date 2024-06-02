@@ -41,7 +41,7 @@ const InfoCard = styled.div`
   background-color: ${(props) => props.bgColor};
   border-radius: 16px;
   color: white;
-  padding: 15px 7.3rem;
+  padding: 15px 7rem;
   margin: 0.5rem;
   display: flex;
   flex-direction: column;

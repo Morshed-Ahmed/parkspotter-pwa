@@ -50,7 +50,7 @@ const CardContainer = styled.div`
   }
 
   @media (max-width: 768px) {
-    height: ${({ isLast }) => (isLast ? "120px" : "150px")};
+    height: ${({ isLast }) => (isLast ? "130px" : "150px")};
   }
 `
 
