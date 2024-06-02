@@ -25,19 +25,51 @@ const SearchBox = styled.div`
   max-width: 400px;
 `;
 
+const PopupContainer = styled.div`
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  position: relative;
+`;
+
+const PopupButton = styled.button`
+  margin-top: 10px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 16px;
+  cursor: pointer;
+`;
+
 const Map = () => {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const [userLocation, setUserLocation] = useState(null);
   const [locationData, setLocationData] = useState([]);
-  const [hoveredLocation, setHoveredLocation] = useState(null);
+  const [activeLocation, setActiveLocation] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: "mapbox://styles/mapbox/streets-v11",
-      center: [90.4125, 23.8103], 
+      center: [90.4125, 23.8103],
       zoom: 12,
     });
 
@@ -73,6 +105,9 @@ const Map = () => {
               parseFloat(item.latitude),
             ],
             availableSpots: item.available_slot,
+            ownerFullName: `${item.park_owner_id.first_name} ${item.park_owner_id.last_name}`,
+            phone: item.mobile_no,
+            image: item.image,
           }));
 
         setLocationData(transformedData);
@@ -111,32 +146,12 @@ const Map = () => {
           .setLngLat(location.coordinates)
           .addTo(mapRef.current);
 
-        marker.getElement().addEventListener("mouseenter", () => {
-          setHoveredLocation(location);
-        });
-
-        marker.getElement().addEventListener("mouseleave", () => {
-          setHoveredLocation(null);
-        });
-
         marker.getElement().addEventListener("click", () => {
-          navigate(`/location/${location.id}`);
-        });
-
-        const popup = new mapboxgl.Popup({ offset: 25 }).setText(
-          `${location.name}: ${location.availableSpots} spots available`
-        );
-
-        marker.getElement().addEventListener("mouseenter", () => {
-          popup.addTo(mapRef.current);
-        });
-
-        marker.getElement().addEventListener("mouseleave", () => {
-          popup.remove();
+          setActiveLocation(location);
         });
       });
     }
-  }, [locationData, navigate]);
+  }, [locationData]);
 
   const calculateDistance = (coords1, coords2) => {
     if (!coords1 || !coords2) return null;
@@ -167,30 +182,41 @@ const Map = () => {
       <MapContainer ref={mapContainerRef}>
         <SearchBox id="geocoder-container" />
 
-        {hoveredLocation && userLocation && (
+        {activeLocation && userLocation && (
           <div
             style={{
               position: "absolute",
               top: "10px",
               left: "50%",
               transform: "translateX(-50%)",
-              backgroundColor: "#fff",
-              padding: "10px",
-              borderRadius: "5px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
               zIndex: 2,
             }}
           >
-            <h4>{hoveredLocation.name}</h4>
-            <p>{hoveredLocation.availableSpots} spots available</p>
-            <p>
-              Distance:{" "}
-              {calculateDistance(
-                userLocation,
-                hoveredLocation.coordinates
-              ).toFixed(2)}{" "}
-              km
-            </p>
+            <PopupContainer>
+              <CloseButton onClick={() => setActiveLocation(null)}>×</CloseButton>
+              {activeLocation.image && (
+                <img
+                  src={activeLocation.image}
+                  alt={activeLocation.name}
+                  style={{ width: "100%", borderRadius: "10px" }}
+                />
+              )}
+              <h4>{activeLocation.name}</h4>
+              <p>Owner: {activeLocation.ownerFullName}</p>
+              <p>Phone: {activeLocation.phone}</p>
+              <p>{activeLocation.availableSpots} spots available</p>
+              <p>
+                Distance:{" "}
+                {calculateDistance(
+                  userLocation,
+                  activeLocation.coordinates
+                ).toFixed(2)}{" "}
+                km
+              </p>
+              <PopupButton onClick={() => navigate(`/location/${activeLocation.id}`)}>
+                Goto
+              </PopupButton>
+            </PopupContainer>
           </div>
         )}
       </MapContainer>

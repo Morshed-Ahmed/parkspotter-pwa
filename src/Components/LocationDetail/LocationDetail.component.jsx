@@ -110,8 +110,7 @@ const Slot = styled.div`
   @media (max-width: 768px) {
     width: 90px;
     height: 130px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
-
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
   }
 `
 
@@ -166,7 +165,7 @@ const SlotNumberCircle = styled.div`
 `
 
 const LocationDetail = () => {
-  const { id } = useParams() // Assuming parkowner ID is passed as a URL param
+  const { id } = useParams()
   const navigate = useNavigate()
   const [parkingSlots, setParkingSlots] = useState([])
   const [zone, setZone] = useState(null)
@@ -181,7 +180,7 @@ const LocationDetail = () => {
         )
         const data = await response.json()
         const zoneInfo = data.find((zone) => zone.park_owner === parseInt(id))
-        setZone(zoneInfo ? zoneInfo.id : null) // Assuming response has a zone field
+        setZone(zoneInfo ? zoneInfo.id : null)
       } catch (error) {
         console.error("Error fetching zone:", error)
       }
@@ -312,3 +311,4 @@ const LocationDetail = () => {
 }
 
 export default LocationDetail
+// original

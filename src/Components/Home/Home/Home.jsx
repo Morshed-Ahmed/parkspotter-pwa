@@ -6,8 +6,6 @@ import {
   FaMapMarkerAlt,
   FaFileInvoice,
   FaUser,
-  // FaHistory,
-  // FaParking,
   FaRoad,
   FaStar,
 } from "react-icons/fa"
@@ -18,7 +16,6 @@ import {
 } from "../../../Store/User/userSlice"
 import Slider from "react-slick"
 import FlipCard from "./FlipCard"
-
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 
@@ -27,17 +24,7 @@ const HomePageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 1rem;
-  background-color: #f7f9fc;
-  // min-height: 100vh;
 `
-
-// const PageTitle = styled.h1`
-//   font-size: 2rem;
-//   margin: 1rem 0;
-//   color: #333;
-//   font-weight: bold;
-//   text-align: center;
-// `;
 
 const CardsCarousel = styled(Slider)`
   width: 100%;
@@ -53,7 +40,7 @@ const InfoCard = styled.div`
   background-color: ${(props) => props.bgColor};
   border-radius: 16px;
   color: white;
-  padding: 15px 7.3rem;
+  padding: 15px 7rem;
   margin: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -62,7 +49,6 @@ const InfoCard = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 90%;
   max-width: 600px;
-  // border: 2px solid ${(props) => props.borderColor};
 
   @media (min-width: 768px) {
     width: 70%;
@@ -133,10 +119,10 @@ const Home = () => {
   const [bookingCount, setBookingCount] = useState(0)
   const [paidUnpaidCount, setPaidUnpaidCount] = useState({ paid: 0, unpaid: 0 })
   const [points, setPoints] = useState(0)
-  const [paidInvoices, setPaidInvoices] = useState(0)
   const [availableParkingLots, setAvailableParkingLots] = useState(0)
 
-  console.log(paidInvoices, paidUnpaidCount, bookingCount, availableParkingLots)
+  console.log(bookingCount);
+
   useEffect(() => {
     if (redirectedFlag) {
       const params = new URLSearchParams(location.search)
@@ -156,33 +142,44 @@ const Home = () => {
   }, [location, navigate, dispatch, redirectedFlag])
 
   useEffect(() => {
-    fetch("/api/bookings")
-      .then((response) => response.json())
-      .then((data) => setBookingCount(data.count))
-      .catch(() => setBookingCount(5))
-
-    fetch("/api/tickets")
-      .then((response) => response.json())
-      .then((data) =>
-        setPaidUnpaidCount({ paid: data.paid, unpaid: data.unpaid })
+    const token = localStorage.getItem("token")
+    if (token) {
+      fetch(
+        "https://parkspotter-backened.onrender.com/customer/customer_dashboard/",
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
       )
-      .catch(() => setPaidUnpaidCount({ paid: 3, unpaid: 1 }))
+        .then((response) => response.json())
+        .then((data) => {
+          const paidBookingsCount = data.bookings.filter(
+            (booking) => booking.is_paid
+          ).length
+          const unpaidBookingsCount = data.bookings.filter(
+            (booking) => !booking.is_paid
+          ).length
 
-    fetch("/api/points")
-      .then((response) => response.json())
-      .then((data) => setPoints(data.points))
-      .catch(() => setPoints(120))
-
-    fetch("/api/invoices")
-      .then((response) => response.json())
-      .then((data) => setPaidInvoices(data.paid))
-      .catch(() => setPaidInvoices(4))
-
-    fetch("/api/parking-lots")
-      .then((response) => response.json())
-      .then((data) => setAvailableParkingLots(data.available))
-      .catch(() => setAvailableParkingLots(7))
-  }, [])
+          setBookingCount(data.bookings.length)
+          setPaidUnpaidCount({
+            paid: paidBookingsCount,
+            unpaid: unpaidBookingsCount,
+          })
+          setPoints(data.customer.points)
+          setAvailableParkingLots(7)
+        })
+        .catch((error) => {
+          console.error("Error fetching customer dashboard data:", error)
+          setBookingCount(5)
+          setPaidUnpaidCount({ paid: 3, unpaid: 1 })
+          setPoints(120)
+          setAvailableParkingLots(7)
+        })
+    } else {
+      navigate("/login")
+    }
+  }, [navigate])
 
   const settings = {
     dots: true,
@@ -197,13 +194,13 @@ const Home = () => {
       <Header />
       <HomePageContainer>
         <CardsCarousel {...settings}>
-          <InfoCard bgColor="#da1d81" borderColor="#fff">
+          <InfoCard bgColor="#da1d81">
             <InfoCardIcon>
               <FaRoad />
             </InfoCardIcon>
             <InfoCardBalance>Trips</InfoCardBalance>
-            <InfoCardNumber>49</InfoCardNumber>
-            <InfoCardHolder>In June</InfoCardHolder>
+            <InfoCardNumber>{paidUnpaidCount.paid}</InfoCardNumber>
+            <InfoCardHolder>Paid Trips</InfoCardHolder>
           </InfoCard>
           <InfoCard bgColor="#0984e3" borderColor="#fff">
             <InfoCardIcon>
@@ -219,7 +216,7 @@ const Home = () => {
           <FlipCard
             icon={<FaFileInvoice />}
             text="Invoices"
-            info="Paid/Unpaid"
+            info={`Paid: ${paidUnpaidCount.paid}, Unpaid: ${paidUnpaidCount.unpaid}`}
             bgColor="#0984e3"
             borderColor="#0984e3"
             iconColor="#fff"
@@ -229,7 +226,6 @@ const Home = () => {
             navigate={navigate}
             backText="View invoices"
           />
-
           <FlipCard
             icon={<FaUser />}
             text="Profile"
@@ -246,7 +242,7 @@ const Home = () => {
           <FlipCard
             icon={<FaMapMarkerAlt />}
             text="Find Parking"
-            info="Available lots"
+            info={`Available lots: ${availableParkingLots}`}
             bgColor="#00b894"
             borderColor="#00b894"
             iconColor="#fff"
@@ -264,4 +260,3 @@ const Home = () => {
 }
 
 export default Home
-// original

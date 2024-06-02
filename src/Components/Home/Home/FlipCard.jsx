@@ -21,8 +21,10 @@ const FlipCard = ({
       isLast={isLast}
       bgColor={bgColor}
     >
-      <CardFront borderColor={borderColor}>
-        <CardIcon color={iconColor}>{icon}</CardIcon>
+      <CardFront borderColor={borderColor} isLast={isLast}>
+        <CardIcon color={iconColor} isLast={isLast}>
+          {icon}
+        </CardIcon>
         <CardText color={textColor}>{text}</CardText>
         <CardInfo color={infoColor}>{info}</CardInfo>
       </CardFront>
@@ -32,50 +34,50 @@ const FlipCard = ({
 
 const CardContainer = styled.div`
   width: 100%;
-  height: ${({ isLast }) => (isLast ? "100px" : "150px")};
+  height: 150px;
   cursor: pointer;
   background-color: ${({ bgColor }) => bgColor};
   border-radius: 12px;
-`
-
-const CardFront = styled.div`
-font-family: 'Roboto', sans-serif;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
-  padding: 1rem;
-  border-radius: 12px;
-  background-color: ${({ bgColor }) => bgColor};
-
-  color: #2c3e50;
-  font-size: 1.1rem;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  height: 100%;
-  border: 2px solid ${({ borderColor }) => borderColor};
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
 
   &:hover {
-    background-color: #ecf0f1;
+    transform: translateY(-5px);
+  }
+
+  @media (max-width: 768px) {
+    height: ${({ isLast }) => (isLast ? "130px" : "150px")};
   }
 `
 
-const CardIcon = styled.div`
+const CardFront = styled.div`
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
+`
+
+const CardIcon = styled.div`
+  font-size: 2.5rem;
   color: ${({ color }) => color};
+  @media (max-width: 768px) {
+    font-size: ${({ isLast }) => (isLast ? "2rem" : "2.5rem")};
+  }
 `
 
 const CardText = styled.div`
+  font-size: 1.2rem;
   margin-top: 0.5rem;
-  text-align: center;
-  font-size: 18px;
   color: ${({ color }) => color};
 `
 
 const CardInfo = styled.div`
-  text-align: right;
-  font-size: 14px;
+  font-size: 1rem;
+  margin-top: 0.3rem;
   color: ${({ color }) => color};
 `
 
