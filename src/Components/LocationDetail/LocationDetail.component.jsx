@@ -1,169 +1,250 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import carIcon from "../../Assets/CarIcon/caricon.png";
-import Header from "../SharedComponents/Header/Header";
+import React, { useEffect, useState } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import styled, { keyframes } from "styled-components"
+import carIcon from "../../Assets/CarIcon/caricon.png"
+import Header from "../SharedComponents/Header/Header"
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`
+
+const slideDown = keyframes`
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`
+
+const slideUp = keyframes`
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`
 
 const Container = styled.div`
-  background-color: #fff;
-  height: 100dvh;
-  @media (max-width: 768px) {
-    padding: 0px;
-  }
-`;
+  background-color: #f5f5f7;
+  min-height: 100vh;
+  animation: ${fadeIn} 1s ease-out;
 
-const Title = styled.h1`
-  text-align: center;
-  margin-bottom: 50px;
-  font-size: 1.7em;
-  color: #202123;
-  margin-top: 30px;
-  text-decoration: underline;
-`;
+  @media (min-width: 768px) {
+    padding: 40px 20px;
+  }
+`
+
+// const Title = styled.h1`
+//   text-align: center;
+//   margin-bottom: 30px;
+//   font-size: 1.75em;
+//   color: #1d1d1f;
+//   font-weight: 600;
+//   animation: ${slideDown} 0.6s ease-out;
+
+//   @media (min-width: 768px) {
+//     font-size: 2.5em;
+//     margin-bottom: 50px;
+//   }
+// `;
 
 const Filters = styled.div`
   display: flex;
   justify-content: center;
-  background-color: #202123;
-  padding: 25px 25px;
+  background-color: #ffffff;
+  padding: 15px 0px;
   gap: 10px;
   margin-bottom: 20px;
+  // border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   flex-wrap: wrap;
+  animation: ${slideDown} 0.6s ease-out;
 
-  @media (max-width: 768px) {
-    justify-content: space-evenly;
-    border-radius: 0px;
+  @media (min-width: 768px) {
+    padding: 15px 25px;
+    gap: 15px;
+    border-radius: 12px;
+    margin-bottom: 60px;
   }
-`;
+`
 
 const Filter = styled.select`
-  padding: 9px 10px;
-  border-radius: 25px;
-  border: 1px solid #fff;
-  background-color: #fff;
-  color: #202123;
-  font-size: 0.8rem;
-`;
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: 1px solid #d2d2d7;
+  background-color: #ffffff;
+  color: #1d1d1f;
+  font-size: 0.9rem;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s;
+
+  &:hover,
+  &:focus {
+    border-color: #0071e3;
+  }
+
+  @media (min-width: 768px) {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+`
 
 const ParkingLotContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-`;
+
+  @media (min-width: 768px) {
+    gap: 40px;
+  }
+`
 
 const ZoneContainer = styled.div`
-  margin-top: 30px;
   position: relative;
-  border-left: 0;
-  border-right: 0;
-  margin-bottom: 20px;
-`;
+  margin-bottom: 30px;
+  animation: ${slideUp} 0.6s ease-out;
+
+  @media (min-width: 768px) {
+    margin-bottom: 60px;
+  }
+`
 
 const ZoneTitle = styled.h2`
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #202123;
-  color: #fff;
-  padding: 8px 18px;
-  font-size: 0.8rem;
-  border-radius: 25px;
-`;
+  position: relative;
+  background: #ffffff;
+  color: #1d1d1f;
+  padding: 8px 15px;
+  font-size: 0.9rem;
+  border-radius: 20px;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 20px;
+  max-width:70%;
+  margin-left:auto;
+  margin-right:auto;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    background-color: #e0f7fa;
+    transform: scale(1.05);
+  }
+
+  @media (min-width: 768px) {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin-bottom: 0;
+  }
+`
 
 const SlotRow = styled.div`
   display: flex;
   justify-content: center;
-  gap: 25px;
+  gap: 15px;
   flex-wrap: wrap;
-  margin: 10px 0;
-`;
+
+  @media (min-width: 768px) {
+    gap: 25px;
+    margin: 20px 0;
+  }
+`
 
 const Slot = styled.div`
-  width: 200px;
-  height: 300px;
-  border: 2px solid #aaa;
-  box-sizing: content-box;
+  width: 100px;
+  height: 150px;
+  border: 2px solid #d2d2d7;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #e5e5ff;
+  background-color: #ffffff;
   position: relative;
-  border-radius: 10px;
+  border-radius: 20px;
   cursor: pointer;
-  color: #202123;
+  color: #1d1d1f;
+  transition: background-color 0.3s ease, transform 0.3s ease,
+    box-shadow 0.3s ease;
+  animation: ${fadeIn} 0.6s ease-out;
+
   &:hover {
-    background-color: ${(props) => (props.booked ? "#ddd" : "#ccffcc")};
+    background-color: ${(props) => (props.booked ? "#f5f5f7" : "#e0f7fa")};
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-  @media (max-width: 768px) {
-    width: 90px;
-    height: 130px;
+  @media (min-width: 768px) {
+    width: 200px;
+    height: 300px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
   }
-`;
+`
 
 const CarIcon = styled.img`
-  width: 95%;
-  height: 60%;
-  margin-top: 30px;
-`;
+  width: 60%;
+  height: auto;
+`
 
 const SlotText = styled.div`
   position: absolute;
-  top: 10px;
-  right: 12px;
-  box-sizing: content-box;
-  background-color: ${(props) => (props.booked ? "#202123" : "#fff")};
-  border: 2px solid ${(props) => (props.booked ? "#666" : "rgb(0,0,255,0.7)")};
-  border-radius: 35px;
-  padding: 2px 7px;
-  font-size: 12px;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: ${(props) => (props.booked ? "#ff3b30" : "#4caf50")};
+  border-radius: 12px;
+  padding: 3px 10px;
+  font-size: 0.7rem;
   font-weight: bold;
-  text-align: center;
-  color: ${(props) => (props.booked ? "#fff" : "#202123")};
+  color: #ffffff;
 
-  @media (max-width: 768px) {
-    padding: 3px 8px;
-    top: 10px;
-    right: 8px;
+  @media (min-width: 768px) {
+    padding: 5px 15px;
+    font-size: 0.8rem;
   }
-`;
+`
 
-const SlotNumber = styled(SlotText)`
-  top: 6%;
-  right: 3.5%;
-  background-color: #fff;
-  color: #202123;
-  border: 1px solid #202123;
-  padding: 18px 10px;
-  font-weight: 700;
-  @media (max-width: 768px) {
-    padding: 18px 10px;
-  }
-`;
-
-const SlotNumberCircle = styled.div`
-  border: 1px solid #202123;
-  padding: 30px;
-  background-color: rgb(0, 0, 255, 0.5);
-  border-radius: 56px;
+const SlotNumber = styled.div`
   position: absolute;
-  top: 40%;
-`;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1d1d1f;
+
+  @media (min-width: 768px) {
+    font-size: 1.5rem;
+  }
+`
 
 const LocationDetail = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [zones, setZones] = useState([]);
-  const [parkingSlots, setParkingSlots] = useState([]);
-  const [zoneFilter, setZoneFilter] = useState("all");
-  const [availabilityFilter, setAvailabilityFilter] = useState("all");
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const [zones, setZones] = useState([])
+  const [parkingSlots, setParkingSlots] = useState([])
+  const [zoneFilter, setZoneFilter] = useState("all")
+  const [availabilityFilter, setAvailabilityFilter] = useState("all")
+  const [collapsedZones, setCollapsedZones] = useState({})
 
   useEffect(() => {
     const fetchZones = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token")
         const response = await fetch(
           `https://parkspotter-backened.onrender.com/accounts/zone/?park_owner=${id}`,
           {
@@ -171,25 +252,25 @@ const LocationDetail = () => {
               Authorization: `Token ${token}`,
             },
           }
-        );
-        const data = await response.json();
-        setZones(data);
+        )
+        const data = await response.json()
+        setZones(data)
       } catch (error) {
-        console.error("Error fetching zones:", error);
+        console.error("Error fetching zones:", error)
       }
-    };
+    }
 
     if (id) {
-      fetchZones();
+      fetchZones()
     }
-  }, [id]);
+  }, [id])
 
   useEffect(() => {
     const fetchParkingSlots = async () => {
-      if (zones.length === 0) return;
+      if (zones.length === 0) return
 
       try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token")
         const response = await fetch(
           `https://parkspotter-backened.onrender.com/accounts/slot/`,
           {
@@ -197,38 +278,49 @@ const LocationDetail = () => {
               Authorization: `Token ${token}`,
             },
           }
-        );
-        const data = await response.json();
-
+        )
+        const data = await response.json()
+        
         const transformedData = data.map((slot) => ({
+          id:slot.id,
           slotNumber: slot.slot_number,
           zone: slot.zone,
           booked: !slot.available,
-        }));
+        }))
 
-        setParkingSlots(transformedData.filter((slot) =>
-          zones.map((zone) => zone.id).includes(slot.zone)
-        ));
+        setParkingSlots(
+          transformedData.filter((slot) =>
+            zones.map((zone) => zone.id).includes(slot.zone)
+          )
+        )
       } catch (error) {
-        console.error("Error fetching parking slots:", error);
+        console.error("Error fetching parking slots:", error)
       }
-    };
+    }
 
-    fetchParkingSlots();
-  }, [zones]);
+    fetchParkingSlots()
+  }, [zones])
 
   const handleSlotClick = (slot) => {
     if (!slot.booked) {
-      navigate(`/slot/${slot.slotNumber}`, { state: { ...slot } });
+      console.log({slot});
+      navigate(`/slot/${slot.id}`, { state: { ...slot } })
     }
-  };
+  }
+
+  const toggleZoneCollapse = (zoneId) => {
+    setCollapsedZones((prev) => ({
+      ...prev,
+      [zoneId]: !prev[zoneId],
+    }))
+  }
 
   const filteredSlots = parkingSlots.filter((slot) => {
-    if (zoneFilter !== "all" && slot.zone !== parseInt(zoneFilter)) return false;
-    if (availabilityFilter === "available" && slot.booked) return false;
-    if (availabilityFilter === "unavailable" && !slot.booked) return false;
-    return true;
-  });
+    if (zoneFilter !== "all" && slot.zone !== parseInt(zoneFilter)) return false
+    if (availabilityFilter === "available" && slot.booked) return false
+    if (availabilityFilter === "unavailable" && !slot.booked) return false
+    return true
+  })
 
   return (
     <>
@@ -255,41 +347,42 @@ const LocationDetail = () => {
             <option value="unavailable">Unavailable</option>
           </Filter>
         </Filters>
-        <Title>Choose Parking Spot</Title>
+        {/* <Title>Choose Parking Spot</Title> */}
 
         <ParkingLotContainer>
           {zones.map((zone) => (
             <ZoneContainer key={zone.id}>
-              <ZoneTitle>{zone.name}</ZoneTitle>
-              <SlotRow>
-                {filteredSlots
-                  .filter((slot) => slot.zone === zone.id)
-                  .map((slot) => (
-                    <Slot
-                      key={slot.slotNumber}
-                      booked={slot.booked}
-                      onClick={() => handleSlotClick(slot)}
-                    >
-                      {slot.booked ? (
-                        <CarIcon src={carIcon} alt="Car Icon" />
-                      ) : (
-                        <SlotNumberCircle>
-                          <SlotNumber>Slot&nbsp;{slot.slotNumber}</SlotNumber>
-                        </SlotNumberCircle>
-                      )}
-                      <SlotText booked={slot.booked}>
-                        {slot.booked ? "Occupied" : "Available"}
-                      </SlotText>
-                    </Slot>
-                  ))}
-              </SlotRow>
+              <ZoneTitle onClick={() => toggleZoneCollapse(zone.id)}>
+                Zone:&nbsp;{zone.name}
+              </ZoneTitle>
+              {!collapsedZones[zone.id] && (
+                <SlotRow>
+                  {filteredSlots
+                    .filter((slot) => slot.zone === zone.id)
+                    .map((slot) => (
+                      <Slot
+                        key={slot.slotNumber}
+                        booked={slot.booked}
+                        onClick={() => handleSlotClick(slot)}
+                      >
+                        {slot.booked ? (
+                          <CarIcon src={carIcon} alt="Car Icon" />
+                        ) : (
+                          <SlotNumber>Slot {slot.slotNumber}</SlotNumber>
+                        )}
+                        <SlotText booked={slot.booked}>
+                          {slot.booked ? "Occupied" : "Available"}
+                        </SlotText>
+                      </Slot>
+                    ))}
+                </SlotRow>
+              )}
             </ZoneContainer>
           ))}
         </ParkingLotContainer>
       </Container>
     </>
-  );
-};
+  )
+}
 
-export default LocationDetail;
-// original
+export default LocationDetail
