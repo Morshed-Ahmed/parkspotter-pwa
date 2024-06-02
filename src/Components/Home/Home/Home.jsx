@@ -24,7 +24,6 @@ const HomePageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 1rem;
-  background-color: #f7f9fc;
 `
 
 const CardsCarousel = styled(Slider)`
